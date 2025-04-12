@@ -29,7 +29,7 @@ func NewRoutes(profileHandler *handlers.ProfileHandler) Routes {
 		Route{
 			"Get Profile",
 			http.MethodGet,
-			"/profile",
+			"/profile/:id",
 			false,
 			profileHandler.GetProfileHandler,
 		},

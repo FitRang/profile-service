@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (ph *ProfileHandler) GetProfileHandler(c *gin.Engine) {
+func (ph *ProfileHandler) GetProfileHandler(c *gin.Context) {
 	type RequestParams struct {
 		ID string `json:"id" form:"id" validate:"required,uuid"`
 	}
@@ -15,7 +15,7 @@ func (ph *ProfileHandler) GetProfileHandler(c *gin.Engine) {
 	}
 	if err := validate.Struct(reqParams); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":"validation error",
+			"message": "validation error",
 		})
 		return
 	}
