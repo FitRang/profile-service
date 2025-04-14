@@ -14,16 +14,16 @@ const (
 )
 
 var (
-	ErrIDAlreadyExists = errors.New("a profile with ID already exists")
-	ErrEmailAlreadyExists = errors.New("a profile with Email already exists")
+	ErrIDAlreadyExists          = errors.New("a profile with ID already exists")
+	ErrEmailAlreadyExists       = errors.New("a profile with Email already exists")
 	ErrPhoneNumberAlreadyExists = errors.New("a profile with Phone Number already exists")
-	ErrProfileNotFound      = errors.New("requested profile not found")
-	ErrProfileCreation      = errors.New("failed to create profile")
-	ErrProfileGet           = errors.New("failed to get profile")
+	ErrProfileNotFound          = errors.New("requested profile not found")
+	ErrProfileCreation          = errors.New("failed to create profile")
+	ErrProfileGet               = errors.New("failed to get profile")
 )
 
 func (ps *ProfileService) CreateProfile(profile *model.ProfileCreateRequest) error {
-	sqlStatement := `INSERT INTO "profile" VALUES ($1)`
+	sqlStatement := `INSERT INTO profile (id, email, full_name, phone_number) VALUES ($1, $2, $3, $4)`
 
 	if _, err := ps.db.Exec(
 		sqlStatement,
@@ -36,11 +36,11 @@ func (ps *ProfileService) CreateProfile(profile *model.ProfileCreateRequest) err
 		if ok {
 			if pqErr.Code == postgresUniqueConstraintViolationCode {
 				switch pqErr.Constraint {
-				case "profile_id_key":
+				case "profile_pkey":
 					return ErrIDAlreadyExists
 				case "profile_email_key":
 					return ErrEmailAlreadyExists
-				case "profile_phone_number":
+				case "profile_phone_number_key":
 					return ErrPhoneNumberAlreadyExists
 				default:
 					log.Println("[ERROR:CreateProfile]:", pqErr.Message)

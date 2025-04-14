@@ -87,7 +87,7 @@ func openDB() (*sql.DB, error) {
 	)
 
 	//psqlInfo := os.Getenv("POSTGRESQL_CONN_STRING")
-	psqlInfo := "postgresql://postgres:[YOUR-PASSWORD]@db.ygnqeraxlvjozannsnyy.supabase.co:5432/postgres"
+	psqlInfo := ""
 	if len(psqlInfo) == 0 {
 		psqlInfo = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	}
@@ -104,6 +104,7 @@ func main() {
 	go handleInterrupts()
 
 	server := gin.Default()
+
 	psqlInfo, err := openDB()
 	if err != nil {
 		log.Printf("error connecting DB: %v", err)

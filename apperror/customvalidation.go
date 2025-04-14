@@ -36,6 +36,7 @@ func CustomValidationError(sourceStruct any, err error) []map[string]string {
 			}
 			errs = append(errs, errorMap)
 		}
+		return errs
 
 	case *json.UnmarshalTypeError:
 		errs = append(errs, map[string]string{errTypes.Field: fmt.Sprintf("%v cannot be %v", errTypes.Field, errTypes.Value)})

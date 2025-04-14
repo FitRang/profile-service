@@ -7,14 +7,15 @@ import (
 
 	"github.com/FitRang/profile-service/domain"
 	"github.com/FitRang/profile-service/model"
+	"github.com/FitRang/profile-service/apperror"
 	"github.com/gin-gonic/gin"
 )
 
 func (ph *ProfileHandler) CreateProfileHandler(c *gin.Context) {
 	profile := model.ProfileCreateRequest{}
-	if err := c.ShouldBind(&profile); err != nil {
+	if err := c.ShouldBindBodyWithJSON(&profile); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Custom Validation Error",
+			"message": apperror.CustomValidationError(&profile, err),
 		})
 		return
 	} 
@@ -23,15 +24,15 @@ func (ph *ProfileHandler) CreateProfileHandler(c *gin.Context) {
 		switch {
 		case errors.Is(err, domain.ErrIDAlreadyExists):
 			c.JSON(http.StatusConflict, gin.H{
-				"message":"A profile with this ID already exits",
+				"message":"A profile with this ID already exists",
 			})
         case errors.Is(err, domain.ErrEmailAlreadyExists):
 			c.JSON(http.StatusConflict, gin.H{
-				"message":"A profile with this email already exits",
+				"message":"A profile with this email already exists",
 			})
 		case errors.Is(err, domain.ErrPhoneNumberAlreadyExists):
 			c.JSON(http.StatusConflict, gin.H{
-				"message":"A profile with this phone number already exits",
+				"message":"A profile with this phone number already exists",
 			})
 		default:
 			log.Printf("Unexpected error while creating profile: %v", err)
@@ -40,6 +41,7 @@ func (ph *ProfileHandler) CreateProfileHandler(c *gin.Context) {
 				"code":"INTERNAL_ERROR",
 			})
 		}
+		return
 	} 
 	c.JSON(http.StatusCreated, gin.H{
 		"message":"Profile created successfully",
