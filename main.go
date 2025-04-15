@@ -86,8 +86,7 @@ func openDB() (*sql.DB, error) {
 		dbname   = "postgres"
 	)
 
-	//psqlInfo := os.Getenv("POSTGRESQL_CONN_STRING")
-	psqlInfo := ""
+	psqlInfo := os.Getenv("POSTGRESQL_CONN_STRING")
 	if len(psqlInfo) == 0 {
 		psqlInfo = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	}

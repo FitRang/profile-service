@@ -9,6 +9,13 @@ build:
 run: build
 	./$(APP_NAME) --port :4444
 
+
+db-init:
+	export $$(cat .env | xargs) && \
+	migrate -path db/migrations -database "$$POSTGRESQL_CONN_STRING" --verbose up
+db-clean:
+	export $$(cat .env | xargs) && \
+	migrate -path db/migrations -database "$$POSTGRESQL_CONN_STRING" --verbose down
 clean:
 	rm -f $(APP_NAME)
 

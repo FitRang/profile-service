@@ -40,7 +40,7 @@ func (ps *ProfileService) CreateProfile(profile *model.ProfileCreateRequest) err
 					return ErrIDAlreadyExists
 				case "profile_email_key":
 					return ErrEmailAlreadyExists
-				case "profile_phone_number_key":
+				case "profile_phoneNumber_key":
 					return ErrPhoneNumberAlreadyExists
 				default:
 					log.Println("[ERROR:CreateProfile]:", pqErr.Message)
