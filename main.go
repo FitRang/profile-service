@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"flag"
 	"fmt"
@@ -14,6 +15,8 @@ import (
 	"github.com/FitRang/profile-service/routes"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 var (
@@ -78,6 +81,10 @@ func handleInterrupts() {
 }
 
 func openDB() (*sql.DB, error) {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error while loading .env file")
+	}
 	var (
 		host     = "localhost"
 		port     = 5432
@@ -93,6 +100,13 @@ func openDB() (*sql.DB, error) {
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		return nil, err
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := db.PingContext(ctx); err != nil {
+		db.Close()
+		return nil, fmt.Errorf("failed to ping database: %w", err)
 	}
 	return db, nil
 }
