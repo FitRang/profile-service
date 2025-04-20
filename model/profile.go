@@ -12,4 +12,5 @@ type ProfileGetResponse struct {
 	Email       string `json:"email"`
 	FullName    string `json:"full_name"`
 	PhoneNumber string `json:"phone_number"`
+	CreatedAT   string `json:"create_at"`
 }

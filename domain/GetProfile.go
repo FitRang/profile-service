@@ -19,6 +19,7 @@ func (ps *ProfileService) GetProfile(profileID string) (*model.ProfileGetRespons
 		&profile.Email,
 		&profile.FullName,
 		&profile.PhoneNumber,
+		&profile.CreatedAT,
 		); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, ErrProfileNotFound
