@@ -6,13 +6,16 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"os/signal"
 	"time"
 
 	"github.com/FitRang/profile-service/domain"
+	"github.com/FitRang/profile-service/grpcProfile"
 	"github.com/FitRang/profile-service/handlers"
 	"github.com/FitRang/profile-service/routes"
+	"google.golang.org/grpc"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -38,6 +41,7 @@ var (
 	// program controller
 	done = make(chan struct{})
 	errc = make(chan error)
+	errg = make(chan error)
 )
 
 func init() {
@@ -141,10 +145,25 @@ func main() {
 	go func() {
 		errc <- server.Run(restPort)
 	}()
+	lis, err := net.Listen("tcp", rpcPort)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	s := grpc.NewServer()
+	grpcProfile.NewGrpcService(s, psqlInfo)
+
+	//Go Routine to start gRPC server
+	go func() {
+		log.Printf("gRPC server listening at %s", rpcPort)
+		errg <- s.Serve(lis)
+	}()
 
 	select {
 	case err := <-errc:
-		log.Printf("ListenAndServe error: %v", err)
+		log.Printf("ListenAndServe REST error: %v", err)
+	case err := <-errg:
+		log.Printf("ListenAndServe gRPC error: %v", err)
 	case <-done:
 		log.Println("shutting down server ...")
 	}
