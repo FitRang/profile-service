@@ -29,8 +29,11 @@ var (
 	versionFlag bool
 	helpFlag    bool
 
-	//server port
-	port string
+	//http server port
+	restPort string
+
+	//gRPC server port
+	rpcPort string
 
 	// program controller
 	done = make(chan struct{})
@@ -40,7 +43,8 @@ var (
 func init() {
 	flag.BoolVar(&versionFlag, "version", false, "show current verison and exit")
 	flag.BoolVar(&helpFlag, "help", false, "show usage and exit")
-	flag.StringVar(&port, "port", ":4444", "server port")
+	flag.StringVar(&restPort, "restPort", ":4444", "http server port")
+	flag.StringVar(&rpcPort, "rpcPort", ":50051", "gRPC server port")
 }
 
 func setBuildVariables() {
@@ -133,8 +137,9 @@ func main() {
 	apiRoutes := routes.NewRoutes(profileHandler)
 	routes.AttachRoutes(server, apiRoutes)
 
+	//Go Routine to start http server
 	go func() {
-		errc <- server.Run(port)
+		errc <- server.Run(restPort)
 	}()
 
 	select {
