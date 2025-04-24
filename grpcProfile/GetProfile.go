@@ -12,6 +12,7 @@ import (
 
 func (s *GrpcServer) GetProfile(ctx context.Context, in *pb.GetRequest) (*pb.GetResponse, error) {
 	if _, err := uuid.Parse(in.Id); err != nil {
+		s.logger.Info().Str("method", "GetProfile").Str("user_id", in.Id).Msg("Invalid Id provided")
 		return &pb.GetResponse{
 			Result: &pb.GetResponse_Error{
 				Error: &pb.Error{
@@ -23,6 +24,7 @@ func (s *GrpcServer) GetProfile(ctx context.Context, in *pb.GetRequest) (*pb.Get
 	profile, err := s.domain.GetProfile(in.Id)
 	if err != nil {
 		if errors.Is(err, domain.ErrProfileNotFound) {
+			s.logger.Info().Str("method", "GetProfile").Str("user_id", in.Id).Msg("Profile Not Found")
 			return &pb.GetResponse{
 				Result: &pb.GetResponse_Error{
 					Error: &pb.Error{
@@ -33,6 +35,7 @@ func (s *GrpcServer) GetProfile(ctx context.Context, in *pb.GetRequest) (*pb.Get
 			}, nil
 		}
 	}
+	s.logger.Info().Str("method", "GetProfile").Str("user_id", in.Id).Msg("Profile found")
 	return &pb.GetResponse{
 		Result: &pb.GetResponse_Profile{
 			Profile: &pb.Profile{
@@ -41,6 +44,7 @@ func (s *GrpcServer) GetProfile(ctx context.Context, in *pb.GetRequest) (*pb.Get
 				Email: profile.Email,
 				PhoneNumber: profile.PhoneNumber,
 				CreatedAt: profile.CreatedAT,
+				UpdatedAt: profile.UpdatedAT,
 			},
 		},
 	}, nil
