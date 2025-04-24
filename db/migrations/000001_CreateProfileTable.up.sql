@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS "profile" (
     "email" VARCHAR (100) NOT NULL UNIQUE,
     "full_name" VARCHAR (150) NOT NULL,
     "phone_number" VARCHAR (15) NOT NULL UNIQUE,
-    "createdAT" TIMESTAMP(3) NOT NULL DEFAULT NOW()
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT NOW(),
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT NOW()
 );
 
 COMMIT;

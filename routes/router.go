@@ -33,6 +33,13 @@ func NewRoutes(profileHandler *handlers.ProfileHandler) Routes {
 			false,
 			profileHandler.GetProfileHandler,
 		},
+		Route{
+			"Patch Profile",
+			http.MethodPatch,
+			"/profile",
+			false,
+			profileHandler.UpdateProfileHandler,
+		},
 	}
 }
 

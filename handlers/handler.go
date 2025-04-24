@@ -26,6 +26,7 @@ func init() {
 type ProfileHandlerInterface interface {
 	CreateProfileHandler(c *gin.Context) 
 	GetProfileHandler(c *gin.Context) 
+	UpdateProfileHandler(c *gin.Context) 
 }
 
 type ProfileHandler struct {

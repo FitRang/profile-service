@@ -8,6 +8,7 @@ import (
 type ProfileServiceInterface interface {
 	CreateProfile(profile *model.ProfileCreateRequest) error
 	GetProfile(profileID string) (*model.ProfileGetResponse, error)
+	UpdateProfile(profile *model.ProfileUpdateRequest) (*model.ProfileUpdateResponse, error)
 }
 
 type ProfileService struct {
