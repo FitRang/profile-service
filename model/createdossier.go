@@ -6,7 +6,7 @@ import (
 )
 
 type Gender    string
-type SkinTone  string
+type Skintone  string
 
 const (
 	GenderMale   Gender = "male"
@@ -14,15 +14,16 @@ const (
 )
 
 const (
-	Pale  SkinTone = "pale"
-	Light SkinTone = "light"
-	Olive SkinTone = "olive"
-	Dark  SkinTone = "dark"
+	Pale  Skintone = "pale"
+	Light Skintone = "light"
+	Olive Skintone = "olive"
+	Dark  Skintone = "dark"
 )
 
 type CreateStyleDossierRequest struct {
+	OwnerID			 string		`json:"owner_id" binding:"required, uuid"`
 	FaceType         string		`json:"face_type" binding:"required"`
-	SkinTone         SkinTone	`json:"skin_tone" binding:"required"`
+	SkinTone         Skintone	`json:"skin_tone" binding:"required"`
 	BodyType         string		`json:"body_type" binding:"required"`
 	Gender           Gender		`json:"gender" binding:"required"`
 	PreferredColors  *[]string	`json:"preferred_colors,omitempty"`
@@ -40,7 +41,7 @@ func (r *CreateStyleDossierRequest) Validate() error {
 		GenderMale : {"rectangular","triangle","trapezoid","oval","invert-triangle"},
 	}
 	bodyTypes := validBodyTypes[r.Gender]
-	if slices.Contains(bodyTypes, r.BodyType) {
+	if !slices.Contains(bodyTypes, r.BodyType) {
 		return fmt.Errorf("invalid body type '%s' for gender '%s'", r.BodyType, r.Gender)
 	}
 	validFaceTypes := map[Gender][] string{
@@ -48,8 +49,8 @@ func (r *CreateStyleDossierRequest) Validate() error {
 		GenderMale : {"rectangular","round","oblong","triangular","heart"},
 	}
 	faceTypes := validFaceTypes[r.Gender]
-	if slices.Contains(faceTypes, r.FaceType) {
-		return fmt.Errorf("invalid body type '%s' for gender '%s'", r.FaceType, r.Gender)
+	if !slices.Contains(faceTypes, r.FaceType) {
+		return fmt.Errorf("invalid face type '%s' for gender '%s'", r.FaceType, r.Gender)
 	}
 	return nil
 }
