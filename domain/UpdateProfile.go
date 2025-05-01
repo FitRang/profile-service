@@ -1,18 +1,16 @@
 package domain
 
 import (
-	"fmt"
-	//"log"
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/FitRang/profile-service/model"
-	//"github.com/lib/pq"
 )
 
 func (ps *ProfileService) UpdateProfile(profile *model.ProfileUpdateRequest) (*model.ProfileUpdateResponse, error) {
 	setClauses := []string{}
-	args := []interface{}{}
+	args := []any{}
 	argIdx := 1
 
 	if profile.Email != nil {

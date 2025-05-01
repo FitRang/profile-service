@@ -1,6 +1,7 @@
 package model
 
 type Dossier struct {
+	Id				 string
 	OwnerID			 string
 	FaceType         string
 	SkinTone         string
@@ -12,7 +13,7 @@ type Dossier struct {
 	Weight           *string
 }
 
-type GetStyleDossierRequest struct {
+type GetDossierRequest struct {
 	ID  string `json:"id" binding:"required, uuid"`
 }
 
