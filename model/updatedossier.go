@@ -17,29 +17,34 @@ type UpdateDossierRequest struct {
 	Weight           string   `json:"weight,omitempty"`
 }
 
-type UpdateDossierResponse struct {
-	Dossier Dossier `json:"dossier"`
-}
-
 func (r *UpdateDossierRequest) Validate() error {
-	if r.Gender != GenderFemale && r.Gender != GenderMale {
+
+	if r.Gender != "" && r.Gender != GenderFemale && r.Gender != GenderMale {
 		return fmt.Errorf("invalid gender: %s", r.Gender)
 	}
-	validBodyTypes := map[Gender][] string{
-		GenderFemale : {"apple","pear","rectangular","hourglass"},
-		GenderMale : {"rectangular","triangle","trapezoid","oval","invert-triangle"},
+
+	if r.Gender != "" {
+		if r.BodyType != "" {
+			validBodyTypes := map[Gender][]string{
+				GenderFemale: {"apple", "pear", "rectangular", "hourglass"},
+				GenderMale:   {"rectangular", "triangle", "trapezoid", "oval", "invert-triangle"},
+			}
+			if !slices.Contains(validBodyTypes[r.Gender], r.BodyType) {
+				return fmt.Errorf("invalid body type '%s' for gender '%s'", r.BodyType, r.Gender)
+			}
+		}
+
+		if r.FaceType != "" {
+			validFaceTypes := map[Gender][]string{
+				GenderFemale: {"oval", "heart", "diamond", "square", "round", "oblong"},
+				GenderMale:   {"rectangular", "round", "oblong", "triangular", "heart"},
+			}
+			if !slices.Contains(validFaceTypes[r.Gender], r.FaceType) {
+				return fmt.Errorf("invalid face type '%s' for gender '%s'", r.FaceType, r.Gender)
+			}
+		}
 	}
-	bodyTypes := validBodyTypes[r.Gender]
-	if !slices.Contains(bodyTypes, r.BodyType) {
-		return fmt.Errorf("invalid body type '%s' for gender '%s'", r.BodyType, r.Gender)
-	}
-	validFaceTypes := map[Gender][] string{
-		GenderFemale : {"oval","heart","diamond","square","round","oblong"},
-		GenderMale : {"rectangular","round","oblong","triangular","heart"},
-	}
-	faceTypes := validFaceTypes[r.Gender]
-	if !slices.Contains(faceTypes, r.FaceType) {
-		return fmt.Errorf("invalid face type '%s' for gender '%s'", r.FaceType, r.Gender)
-	}
+
 	return nil
 }
+

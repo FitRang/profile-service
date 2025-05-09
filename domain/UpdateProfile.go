@@ -13,19 +13,19 @@ func (ps *ProfileService) UpdateProfile(profile *model.ProfileUpdateRequest) (*m
 	args := []any{}
 	argIdx := 1
 
-	if profile.Email != nil {
+	if profile.Email != "" {
 		setClauses = append(setClauses, fmt.Sprintf("email = $%d", argIdx))
-		args = append(args, *profile.Email)
+		args = append(args, profile.Email)
 		argIdx++
 	}
-	if profile.FullName != nil {
+	if profile.FullName != "" {
 		setClauses = append(setClauses, fmt.Sprintf("full_name = $%d", argIdx))
-		args = append(args, *profile.FullName)
+		args = append(args, profile.FullName)
 		argIdx++
 	}
-	if profile.PhoneNumber != nil {
+	if profile.PhoneNumber != "" {
 		setClauses = append(setClauses, fmt.Sprintf("phone_number = $%d", argIdx))
-		args = append(args, *profile.PhoneNumber)
+		args = append(args, profile.PhoneNumber)
 		argIdx++
 	}
 

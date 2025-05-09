@@ -52,7 +52,7 @@ func (ps *ProfileService) CreateDossier(dossier *model.CreateStyleDossierRequest
 			return ErrDossierCreation
 		}
 		log.Printf("[ERROR:CreateDossier] Unexpected error: %v\n", err)
-		return fmt.Errorf("%w: %v", ErrDossierCreation, err)
+		return ErrDossierCreation
 	}
 	return nil
 }

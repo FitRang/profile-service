@@ -17,10 +17,10 @@ type ProfileGetResponse struct {
 }
 
 type ProfileUpdateRequest struct {
-	ID			 string `json:"id" binding:"required,uuid"`
-	Email		*string `json:"email" binding:"omitempty,email"`
-	FullName    *string `json:"full_name" binding:"omitempty"`
-	PhoneNumber *string `json:"phone_number" binding:"omitempty,e164"`
+	ID			string `json:"id" binding:"required,uuid"`
+	Email		string `json:"email" binding:"omitempty,email"`
+	FullName    string `json:"full_name" binding:"omitempty"`
+	PhoneNumber string `json:"phone_number" binding:"omitempty,e164"`
 }
 
 type ProfileUpdateResponse struct {

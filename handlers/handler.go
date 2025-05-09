@@ -27,6 +27,11 @@ type ProfileHandlerInterface interface {
 	CreateProfileHandler(c *gin.Context) 
 	GetProfileHandler(c *gin.Context) 
 	UpdateProfileHandler(c *gin.Context) 
+	CreateDossierHandler(c *gin.Context) 
+	UpdateDossierHandler(c *gin.Context) 
+	GetDossiereHandler(c *gin.Context) 
+	UpdateDossierAccessHandler(c *gin.Context) 
+	GetAllDossiersHandler(c *gin.Context) 
 }
 
 type ProfileHandler struct {
