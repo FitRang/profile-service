@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package profile;
+
+option go_package = "github.com/Foxtrot-14/FitRang/profile-service/proto;proto";
+
+service ProfileService {
+  rpc GetProfilesByEmail(GetByEmailRequest) returns (GetProfilesResponse);
+  rpc GetDossierByEmail(GetByEmailRequest) returns (GetDossierResponse);
+}
+
+message GetByEmailRequest {
+  string email = 1;
+}
+
+message GetProfilesResponse {
+  repeated Profile profile = 1;
+}
+
+message GetDossierResponse {
+  Dossier dossier = 1;
+}
+
+enum AccessStatus {
+  ACCESS_STATUS_UNSPECIFIED = 0;
+  ACCESS_STATUS_PENDING = 1;
+  ACCESS_STATUS_GRANTED = 2;
+  ACCESS_STATUS_REVOKED = 3;
+}
+
+message Profile {
+  string id = 1;
+  string full_name = 2;
+  string username = 3;
+  string email = 4;
+  AccessStatus access_status = 5;
+  string profile_url = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
+
+message Dossier {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  string face_type = 4;
+  string skin_tone = 5;
+  string body_type = 6;
+  string gender = 7;
+  repeated string preferred_colors = 8;
+  repeated string disliked_colors = 9;
+  repeated string viewers = 10;
+  string height = 11;
+  string weight = 12;
+  string created_at = 13;
+  string updated_at = 14;
+}

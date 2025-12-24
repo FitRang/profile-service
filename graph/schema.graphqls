@@ -1,0 +1,99 @@
+scalar Upload
+
+enum AccessStatus {
+  YES
+  NO
+  REQUESTED
+  OWNER
+}
+
+enum Gender {
+  male
+  female
+}
+
+enum SkinTone {
+  pale
+  light
+  olive
+  dark
+}
+
+type Profile {
+  id: ID!
+  fullName: String!
+  username: String!
+  email: String!
+  accessStatus: AccessStatus!
+  profileUrl: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Dossier {
+  id: ID!
+  email: String!
+  username: String!
+  faceType: String!
+  skinTone: SkinTone!
+  bodyType: String!
+  gender: Gender!
+  preferredColors: [String!]
+  dislikedColors: [String!]
+  viewers: [String!]!
+  height: String
+  weight: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+input CreateDossier {
+  faceType: String!
+  skinTone: SkinTone!
+  bodyType: String!
+  gender: Gender!
+  preferredColors: [String!]
+  dislikedColors: [String!]
+  height: String
+  weight: String
+}
+
+input UpdateDossier {
+  faceType: String
+  skinTone: SkinTone
+  bodyType: String
+  gender: Gender
+  preferredColors: [String]
+  dislikedColors: [String]
+  height: String
+  weight: String
+}
+
+input ProfileCreateInput {
+  fullName: String!
+  email: String!
+  username: String!
+}
+
+input ProfileUpdateInput {
+  email: String!
+  username: String!
+  fullName: String
+}
+
+type Query {
+  profile(username: String!): Profile!
+  getMyProfile: Profile!
+  getMyDossier: Dossier!
+  dossier(username: String!): Dossier!
+}
+
+type Mutation {
+  requestAccess(username: String!): Boolean!
+  grantAccess(username: String!): Boolean!
+  createProfile(input: ProfileCreateInput!): Profile!
+  createDossier(input: CreateDossier!): Dossier!
+  updateDossier(input: UpdateDossier!): Dossier!
+  updateProfile(input: ProfileUpdateInput!): Profile!
+  uploadProfilePicture(file: Upload!): Profile!
+}
