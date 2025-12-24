@@ -28,6 +28,11 @@ import (
 	"google.golang.org/grpc"
 )
 
+var (
+	restPort    string = "8080"
+	rpcPort     string = "8081"
+)
+
 func main() {
 	godotenv.Load(".env")
 	metrics.Register()
@@ -95,8 +100,6 @@ func main() {
 	)
 
 	go func() {
-		rpcPort := os.Getenv("PROFILE_SERVICE_RPCPORT")
-
 		lis, err := net.Listen("tcp", ":"+rpcPort)
 		if err != nil {
 			log.Fatal("gRPC listen error:", err)
@@ -127,7 +130,6 @@ func main() {
 		}
 	}()
 
-	port := os.Getenv("PROFILE_SERVICE_PORT")
-	log.Printf("Profile Service (HTTP) running on :%s", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Printf("Profile Service (HTTP) running on :%s", restPort)
+	log.Fatal(http.ListenAndServe(":"+restPort, nil))
 }
