@@ -67,6 +67,11 @@ func (r *queryResolver) Dossier(ctx context.Context, username string) (*model.Do
 	return r.DossierService.GetDossier(ctx, username)
 }
 
+// CheckUsername is the resolver for the checkUsername field.
+func (r *queryResolver) CheckUsername(ctx context.Context, username string) (bool, error) {
+	return r.ProfileService.CheckUsername(ctx, username)
+}
+
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 

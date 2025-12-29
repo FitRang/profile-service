@@ -94,24 +94,6 @@ This service is written in **Go** and primarily communicates using **GraphQL**, 
 
 ---
 
-## TODOs
-
-* [x] Create Profile API
-* [x] Edit Profile API
-* [x] Delete Profile API
-* [x] Create Dossier API
-* [x] Edit Dossier API
-* [x] Delete Dossier API
-* [x] GraphQL schema and resolvers
-* [x] gRPC server setup
-* [x] gRPC endpoints for profile retrieval
-* [x] gRPC endpoints for dossier retrieval
-* [x] Authorization integration
-* [ ] Test upload endpoint
-* [ ] Add check username endpoint
-
----
-
 ## Future Improvements
 
 * Username availability checks

@@ -86,6 +86,7 @@ type Query {
   getMyProfile: Profile!
   getMyDossier: Dossier!
   dossier(username: String!): Dossier!
+  checkUsername(username: String!): Boolean!
 }
 
 type Mutation {
