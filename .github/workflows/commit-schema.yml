@@ -1,6 +1,9 @@
 name: Rover Actions
 
-on: [push]
+on:
+  push:
+    paths:
+      - graph/schema.graphqls
 
 jobs:
   build:
