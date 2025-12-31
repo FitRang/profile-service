@@ -40,8 +40,6 @@ func main() {
 
 	eventBus, err := eventbus.NewEventBus(eventbus.Config{
 		Brokers:  kafkaCfg.Brokers,
-		Username: kafkaCfg.Username,
-		Password: kafkaCfg.Password,
 	})
 	if err != nil {
 		log.Fatalf("failed to init event bus: %v", err)

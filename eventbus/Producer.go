@@ -14,10 +14,7 @@ type Producer struct {
 func (e *EventBus) NewProducer() (*Producer, error) {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": e.cfg.Brokers,
-		"security.protocol": "SASL_PLAINTEXT",
-		"sasl.mechanisms":   "PLAIN",
-		"sasl.username":     e.cfg.Username,
-		"sasl.password":     e.cfg.Password,
+		"security.protocol": "PLAINTEXT",
 
 		"acks":              "all",
 		"enable.idempotence": true,
