@@ -39,4 +39,4 @@ jobs:
           graph-ref: ${{ secrets.APOLLO_GRAPH_REF }}
           name: profile-service
           schema: ./graph/schema.graphqls
-          routing-url: http://profile-service:8080
+          routing-url: http://profile-service:8080/query
