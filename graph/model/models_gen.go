@@ -40,11 +40,20 @@ type Dossier struct {
 type Mutation struct {
 }
 
+type MyProfile struct {
+	ID         string  `json:"id"`
+	FullName   string  `json:"fullName"`
+	Username   string  `json:"username"`
+	Email      string  `json:"email"`
+	ProfileURL *string `json:"profileUrl,omitempty"`
+	CreatedAt  string  `json:"createdAt"`
+	UpdatedAt  string  `json:"updatedAt"`
+}
+
 type Profile struct {
 	ID           string       `json:"id"`
 	FullName     string       `json:"fullName"`
 	Username     string       `json:"username"`
-	Email        string       `json:"email"`
 	AccessStatus AccessStatus `json:"accessStatus"`
 	ProfileURL   *string      `json:"profileUrl,omitempty"`
 	CreatedAt    string       `json:"createdAt"`

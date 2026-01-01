@@ -23,7 +23,7 @@ func (r *mutationResolver) GrantAccess(ctx context.Context, username string) (bo
 }
 
 // CreateProfile is the resolver for the createProfile field.
-func (r *mutationResolver) CreateProfile(ctx context.Context, input model.ProfileCreateInput) (*model.Profile, error) {
+func (r *mutationResolver) CreateProfile(ctx context.Context, input model.ProfileCreateInput) (*model.MyProfile, error) {
 	return r.ProfileService.CreateProfile(ctx, input)
 }
 

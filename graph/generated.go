@@ -74,10 +74,19 @@ type ComplexityRoot struct {
 		UploadProfilePicture func(childComplexity int, file graphql.Upload) int
 	}
 
+	MyProfile struct {
+		CreatedAt  func(childComplexity int) int
+		Email      func(childComplexity int) int
+		FullName   func(childComplexity int) int
+		ID         func(childComplexity int) int
+		ProfileURL func(childComplexity int) int
+		UpdatedAt  func(childComplexity int) int
+		Username   func(childComplexity int) int
+	}
+
 	Profile struct {
 		AccessStatus func(childComplexity int) int
 		CreatedAt    func(childComplexity int) int
-		Email        func(childComplexity int) int
 		FullName     func(childComplexity int) int
 		ID           func(childComplexity int) int
 		ProfileURL   func(childComplexity int) int
@@ -97,7 +106,7 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	RequestAccess(ctx context.Context, username string) (bool, error)
 	GrantAccess(ctx context.Context, username string) (bool, error)
-	CreateProfile(ctx context.Context, input model.ProfileCreateInput) (*model.Profile, error)
+	CreateProfile(ctx context.Context, input model.ProfileCreateInput) (*model.MyProfile, error)
 	CreateDossier(ctx context.Context, input model.CreateDossier) (*model.Dossier, error)
 	UpdateDossier(ctx context.Context, input model.UpdateDossier) (*model.Dossier, error)
 	UpdateProfile(ctx context.Context, input model.ProfileUpdateInput) (*model.Profile, error)
@@ -293,6 +302,49 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Mutation.UploadProfilePicture(childComplexity, args["file"].(graphql.Upload)), true
 
+	case "MyProfile.createdAt":
+		if e.complexity.MyProfile.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.MyProfile.CreatedAt(childComplexity), true
+	case "MyProfile.email":
+		if e.complexity.MyProfile.Email == nil {
+			break
+		}
+
+		return e.complexity.MyProfile.Email(childComplexity), true
+	case "MyProfile.fullName":
+		if e.complexity.MyProfile.FullName == nil {
+			break
+		}
+
+		return e.complexity.MyProfile.FullName(childComplexity), true
+	case "MyProfile.id":
+		if e.complexity.MyProfile.ID == nil {
+			break
+		}
+
+		return e.complexity.MyProfile.ID(childComplexity), true
+	case "MyProfile.profileUrl":
+		if e.complexity.MyProfile.ProfileURL == nil {
+			break
+		}
+
+		return e.complexity.MyProfile.ProfileURL(childComplexity), true
+	case "MyProfile.updatedAt":
+		if e.complexity.MyProfile.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.MyProfile.UpdatedAt(childComplexity), true
+	case "MyProfile.username":
+		if e.complexity.MyProfile.Username == nil {
+			break
+		}
+
+		return e.complexity.MyProfile.Username(childComplexity), true
+
 	case "Profile.accessStatus":
 		if e.complexity.Profile.AccessStatus == nil {
 			break
@@ -305,12 +357,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Profile.CreatedAt(childComplexity), true
-	case "Profile.email":
-		if e.complexity.Profile.Email == nil {
-			break
-		}
-
-		return e.complexity.Profile.Email(childComplexity), true
 	case "Profile.fullName":
 		if e.complexity.Profile.FullName == nil {
 			break
@@ -1188,7 +1234,7 @@ func (ec *executionContext) _Mutation_createProfile(ctx context.Context, field g
 			return ec.resolvers.Mutation().CreateProfile(ctx, fc.Args["input"].(model.ProfileCreateInput))
 		},
 		nil,
-		ec.marshalNProfile2ᚖgithubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐProfile,
+		ec.marshalNMyProfile2ᚖgithubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐMyProfile,
 		true,
 		true,
 	)
@@ -1203,23 +1249,21 @@ func (ec *executionContext) fieldContext_Mutation_createProfile(ctx context.Cont
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_Profile_id(ctx, field)
+				return ec.fieldContext_MyProfile_id(ctx, field)
 			case "fullName":
-				return ec.fieldContext_Profile_fullName(ctx, field)
+				return ec.fieldContext_MyProfile_fullName(ctx, field)
 			case "username":
-				return ec.fieldContext_Profile_username(ctx, field)
+				return ec.fieldContext_MyProfile_username(ctx, field)
 			case "email":
-				return ec.fieldContext_Profile_email(ctx, field)
-			case "accessStatus":
-				return ec.fieldContext_Profile_accessStatus(ctx, field)
+				return ec.fieldContext_MyProfile_email(ctx, field)
 			case "profileUrl":
-				return ec.fieldContext_Profile_profileUrl(ctx, field)
+				return ec.fieldContext_MyProfile_profileUrl(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_Profile_createdAt(ctx, field)
+				return ec.fieldContext_MyProfile_createdAt(ctx, field)
 			case "updatedAt":
-				return ec.fieldContext_Profile_updatedAt(ctx, field)
+				return ec.fieldContext_MyProfile_updatedAt(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type MyProfile", field.Name)
 		},
 	}
 	defer func() {
@@ -1409,8 +1453,6 @@ func (ec *executionContext) fieldContext_Mutation_updateProfile(ctx context.Cont
 				return ec.fieldContext_Profile_fullName(ctx, field)
 			case "username":
 				return ec.fieldContext_Profile_username(ctx, field)
-			case "email":
-				return ec.fieldContext_Profile_email(ctx, field)
 			case "accessStatus":
 				return ec.fieldContext_Profile_accessStatus(ctx, field)
 			case "profileUrl":
@@ -1468,8 +1510,6 @@ func (ec *executionContext) fieldContext_Mutation_uploadProfilePicture(ctx conte
 				return ec.fieldContext_Profile_fullName(ctx, field)
 			case "username":
 				return ec.fieldContext_Profile_username(ctx, field)
-			case "email":
-				return ec.fieldContext_Profile_email(ctx, field)
 			case "accessStatus":
 				return ec.fieldContext_Profile_accessStatus(ctx, field)
 			case "profileUrl":
@@ -1492,6 +1532,209 @@ func (ec *executionContext) fieldContext_Mutation_uploadProfilePicture(ctx conte
 	if fc.Args, err = ec.field_Mutation_uploadProfilePicture_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyProfile_id(ctx context.Context, field graphql.CollectedField, obj *model.MyProfile) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyProfile_id,
+		func(ctx context.Context) (any, error) {
+			return obj.ID, nil
+		},
+		nil,
+		ec.marshalNID2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyProfile_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyProfile",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyProfile_fullName(ctx context.Context, field graphql.CollectedField, obj *model.MyProfile) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyProfile_fullName,
+		func(ctx context.Context) (any, error) {
+			return obj.FullName, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyProfile_fullName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyProfile",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyProfile_username(ctx context.Context, field graphql.CollectedField, obj *model.MyProfile) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyProfile_username,
+		func(ctx context.Context) (any, error) {
+			return obj.Username, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyProfile_username(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyProfile",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyProfile_email(ctx context.Context, field graphql.CollectedField, obj *model.MyProfile) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyProfile_email,
+		func(ctx context.Context) (any, error) {
+			return obj.Email, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyProfile_email(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyProfile",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyProfile_profileUrl(ctx context.Context, field graphql.CollectedField, obj *model.MyProfile) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyProfile_profileUrl,
+		func(ctx context.Context) (any, error) {
+			return obj.ProfileURL, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyProfile_profileUrl(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyProfile",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyProfile_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.MyProfile) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyProfile_createdAt,
+		func(ctx context.Context) (any, error) {
+			return obj.CreatedAt, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyProfile_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyProfile",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyProfile_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.MyProfile) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyProfile_updatedAt,
+		func(ctx context.Context) (any, error) {
+			return obj.UpdatedAt, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyProfile_updatedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyProfile",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
 	}
 	return fc, nil
 }
@@ -1571,35 +1814,6 @@ func (ec *executionContext) _Profile_username(ctx context.Context, field graphql
 }
 
 func (ec *executionContext) fieldContext_Profile_username(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Profile",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Profile_email(ctx context.Context, field graphql.CollectedField, obj *model.Profile) (ret graphql.Marshaler) {
-	return graphql.ResolveField(
-		ctx,
-		ec.OperationContext,
-		field,
-		ec.fieldContext_Profile_email,
-		func(ctx context.Context) (any, error) {
-			return obj.Email, nil
-		},
-		nil,
-		ec.marshalNString2string,
-		true,
-		true,
-	)
-}
-
-func (ec *executionContext) fieldContext_Profile_email(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Profile",
 		Field:      field,
@@ -1759,8 +1973,6 @@ func (ec *executionContext) fieldContext_Query_profile(ctx context.Context, fiel
 				return ec.fieldContext_Profile_fullName(ctx, field)
 			case "username":
 				return ec.fieldContext_Profile_username(ctx, field)
-			case "email":
-				return ec.fieldContext_Profile_email(ctx, field)
 			case "accessStatus":
 				return ec.fieldContext_Profile_accessStatus(ctx, field)
 			case "profileUrl":
@@ -1817,8 +2029,6 @@ func (ec *executionContext) fieldContext_Query_getMyProfile(_ context.Context, f
 				return ec.fieldContext_Profile_fullName(ctx, field)
 			case "username":
 				return ec.fieldContext_Profile_username(ctx, field)
-			case "email":
-				return ec.fieldContext_Profile_email(ctx, field)
 			case "accessStatus":
 				return ec.fieldContext_Profile_accessStatus(ctx, field)
 			case "profileUrl":
@@ -3984,6 +4194,72 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 	return out
 }
 
+var myProfileImplementors = []string{"MyProfile"}
+
+func (ec *executionContext) _MyProfile(ctx context.Context, sel ast.SelectionSet, obj *model.MyProfile) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, myProfileImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("MyProfile")
+		case "id":
+			out.Values[i] = ec._MyProfile_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "fullName":
+			out.Values[i] = ec._MyProfile_fullName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "username":
+			out.Values[i] = ec._MyProfile_username(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "email":
+			out.Values[i] = ec._MyProfile_email(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "profileUrl":
+			out.Values[i] = ec._MyProfile_profileUrl(ctx, field, obj)
+		case "createdAt":
+			out.Values[i] = ec._MyProfile_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updatedAt":
+			out.Values[i] = ec._MyProfile_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var profileImplementors = []string{"Profile"}
 
 func (ec *executionContext) _Profile(ctx context.Context, sel ast.SelectionSet, obj *model.Profile) graphql.Marshaler {
@@ -4007,11 +4283,6 @@ func (ec *executionContext) _Profile(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "username":
 			out.Values[i] = ec._Profile_username(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "email":
-			out.Values[i] = ec._Profile_email(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -4619,6 +4890,20 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNMyProfile2githubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐMyProfile(ctx context.Context, sel ast.SelectionSet, v model.MyProfile) graphql.Marshaler {
+	return ec._MyProfile(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNMyProfile2ᚖgithubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐMyProfile(ctx context.Context, sel ast.SelectionSet, v *model.MyProfile) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._MyProfile(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNProfile2githubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐProfile(ctx context.Context, sel ast.SelectionSet, v model.Profile) graphql.Marshaler {

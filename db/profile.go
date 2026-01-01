@@ -49,7 +49,6 @@ func ToBsonProfile(p *model.Profile) (Profile, error) {
 		ID:         oid,
 		Username:   p.Username,
 		FullName:   p.FullName,
-		Email:		p.Email,
 		ProfileURL: p.ProfileURL,
 		CreatedAt:  p.CreatedAt,
 		UpdatedAt:  p.UpdatedAt,

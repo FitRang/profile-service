@@ -32,7 +32,6 @@ func (p *ProfileService) GetProfile(ctx context.Context, username string) (*mode
 	}
 	//TODO: Check if the requester has access to Dossier
 	profile.AccessStatus = model.AccessStatusNo
-	profile.Email = ""
 
 	return &profile, nil
 }

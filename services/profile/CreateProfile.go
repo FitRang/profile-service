@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
-func (p *ProfileService) CreateProfile(ctx context.Context, input model.ProfileCreateInput) (*model.Profile, error) {
+func (p *ProfileService) CreateProfile(ctx context.Context, input model.ProfileCreateInput) (*model.MyProfile, error) {
 	now := time.Now().UTC().Format(time.RFC3339)
 
 	bsonProfile := db.Profile{
@@ -39,12 +39,19 @@ func (p *ProfileService) CreateProfile(ctx context.Context, input model.ProfileC
 		ID:         oid.Hex(),
 		Username:   bsonProfile.Username,
 		FullName:   bsonProfile.FullName,
-		Email:      bsonProfile.Email,
 		ProfileURL: bsonProfile.ProfileURL,
 		CreatedAt:  bsonProfile.CreatedAt,
 		UpdatedAt:  bsonProfile.UpdatedAt,
 	}
 
 	p.sendProfileToIndex(*gqlProfile)
-	return gqlProfile, nil
+	return &model.MyProfile{
+		ID: oid.Hex(),
+		Username:   bsonProfile.Username,
+		FullName:   bsonProfile.FullName,
+		Email:		bsonProfile.Email,
+		ProfileURL: bsonProfile.ProfileURL,
+		CreatedAt:  bsonProfile.CreatedAt,
+		UpdatedAt:  bsonProfile.UpdatedAt,
+	}, nil
 }

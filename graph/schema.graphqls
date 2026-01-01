@@ -23,8 +23,17 @@ type Profile {
   id: ID!
   fullName: String!
   username: String!
-  email: String!
-  accessStatus: AccessStatus
+  accessStatus: AccessStatus!
+  profileUrl: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type MyProfile {
+  id: ID!
+  fullName: String!
+  username: String!
+  email:    String!
   profileUrl: String
   createdAt: String!
   updatedAt: String!
@@ -92,7 +101,7 @@ type Query {
 type Mutation {
   requestAccess(username: String!): Boolean!
   grantAccess(username: String!): Boolean!
-  createProfile(input: ProfileCreateInput!): Profile!
+  createProfile(input: ProfileCreateInput!): MyProfile!
   createDossier(input: CreateDossier!): Dossier!
   updateDossier(input: UpdateDossier!): Dossier!
   updateProfile(input: ProfileUpdateInput!): Profile!

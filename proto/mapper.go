@@ -12,7 +12,6 @@ func toProtoProfile(p model.Profile) *Profile {
 		Id:           p.ID,
 		FullName:     p.FullName,
 		Username:     p.Username,
-		Email:        p.Email,
 		ProfileUrl:   profileURL,
 		CreatedAt:    p.CreatedAt,
 		UpdatedAt:    p.UpdatedAt,
