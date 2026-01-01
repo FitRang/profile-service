@@ -24,10 +24,10 @@ func (s *ProfileGRPCService) GetProfilesByEmail(
 	}
 
 	for _, dossier := range dossiers {
-		if err := s.rdb.StoreDossier(ctx, dossier.Email, dossier); err != nil {
+		if err := s.rdb.StoreDossier(ctx, dossier.Username, dossier); err != nil {
 			log.Printf(
 				"[WARN] failed to cache dossier %s: %v",
-				dossier.Email,
+				dossier.Username,
 				err,
 			)
 		}

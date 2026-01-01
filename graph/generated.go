@@ -51,7 +51,6 @@ type ComplexityRoot struct {
 		BodyType        func(childComplexity int) int
 		CreatedAt       func(childComplexity int) int
 		DislikedColors  func(childComplexity int) int
-		Email           func(childComplexity int) int
 		FaceType        func(childComplexity int) int
 		Gender          func(childComplexity int) int
 		Height          func(childComplexity int) int
@@ -72,6 +71,23 @@ type ComplexityRoot struct {
 		UpdateDossier        func(childComplexity int, input model.UpdateDossier) int
 		UpdateProfile        func(childComplexity int, input model.ProfileUpdateInput) int
 		UploadProfilePicture func(childComplexity int, file graphql.Upload) int
+	}
+
+	MyDossier struct {
+		BodyType        func(childComplexity int) int
+		CreatedAt       func(childComplexity int) int
+		DislikedColors  func(childComplexity int) int
+		Email           func(childComplexity int) int
+		FaceType        func(childComplexity int) int
+		Gender          func(childComplexity int) int
+		Height          func(childComplexity int) int
+		ID              func(childComplexity int) int
+		PreferredColors func(childComplexity int) int
+		SkinTone        func(childComplexity int) int
+		UpdatedAt       func(childComplexity int) int
+		Username        func(childComplexity int) int
+		Viewers         func(childComplexity int) int
+		Weight          func(childComplexity int) int
 	}
 
 	MyProfile struct {
@@ -107,15 +123,15 @@ type MutationResolver interface {
 	RequestAccess(ctx context.Context, username string) (bool, error)
 	GrantAccess(ctx context.Context, username string) (bool, error)
 	CreateProfile(ctx context.Context, input model.ProfileCreateInput) (*model.MyProfile, error)
-	CreateDossier(ctx context.Context, input model.CreateDossier) (*model.Dossier, error)
+	CreateDossier(ctx context.Context, input model.CreateDossier) (*model.MyDossier, error)
 	UpdateDossier(ctx context.Context, input model.UpdateDossier) (*model.Dossier, error)
 	UpdateProfile(ctx context.Context, input model.ProfileUpdateInput) (*model.Profile, error)
 	UploadProfilePicture(ctx context.Context, file graphql.Upload) (*model.Profile, error)
 }
 type QueryResolver interface {
 	Profile(ctx context.Context, username string) (*model.Profile, error)
-	GetMyProfile(ctx context.Context) (*model.Profile, error)
-	GetMyDossier(ctx context.Context) (*model.Dossier, error)
+	GetMyProfile(ctx context.Context) (*model.MyProfile, error)
+	GetMyDossier(ctx context.Context) (*model.MyDossier, error)
 	Dossier(ctx context.Context, username string) (*model.Dossier, error)
 	CheckUsername(ctx context.Context, username string) (bool, error)
 }
@@ -157,12 +173,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Dossier.DislikedColors(childComplexity), true
-	case "Dossier.email":
-		if e.complexity.Dossier.Email == nil {
-			break
-		}
-
-		return e.complexity.Dossier.Email(childComplexity), true
 	case "Dossier.faceType":
 		if e.complexity.Dossier.FaceType == nil {
 			break
@@ -301,6 +311,91 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.UploadProfilePicture(childComplexity, args["file"].(graphql.Upload)), true
+
+	case "MyDossier.bodyType":
+		if e.complexity.MyDossier.BodyType == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.BodyType(childComplexity), true
+	case "MyDossier.createdAt":
+		if e.complexity.MyDossier.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.CreatedAt(childComplexity), true
+	case "MyDossier.dislikedColors":
+		if e.complexity.MyDossier.DislikedColors == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.DislikedColors(childComplexity), true
+	case "MyDossier.email":
+		if e.complexity.MyDossier.Email == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.Email(childComplexity), true
+	case "MyDossier.faceType":
+		if e.complexity.MyDossier.FaceType == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.FaceType(childComplexity), true
+	case "MyDossier.gender":
+		if e.complexity.MyDossier.Gender == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.Gender(childComplexity), true
+	case "MyDossier.height":
+		if e.complexity.MyDossier.Height == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.Height(childComplexity), true
+	case "MyDossier.id":
+		if e.complexity.MyDossier.ID == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.ID(childComplexity), true
+	case "MyDossier.preferredColors":
+		if e.complexity.MyDossier.PreferredColors == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.PreferredColors(childComplexity), true
+	case "MyDossier.skinTone":
+		if e.complexity.MyDossier.SkinTone == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.SkinTone(childComplexity), true
+	case "MyDossier.updatedAt":
+		if e.complexity.MyDossier.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.UpdatedAt(childComplexity), true
+	case "MyDossier.username":
+		if e.complexity.MyDossier.Username == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.Username(childComplexity), true
+	case "MyDossier.viewers":
+		if e.complexity.MyDossier.Viewers == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.Viewers(childComplexity), true
+	case "MyDossier.weight":
+		if e.complexity.MyDossier.Weight == nil {
+			break
+		}
+
+		return e.complexity.MyDossier.Weight(childComplexity), true
 
 	case "MyProfile.createdAt":
 		if e.complexity.MyProfile.CreatedAt == nil {
@@ -759,35 +854,6 @@ func (ec *executionContext) fieldContext_Dossier_id(_ context.Context, field gra
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Dossier_email(ctx context.Context, field graphql.CollectedField, obj *model.Dossier) (ret graphql.Marshaler) {
-	return graphql.ResolveField(
-		ctx,
-		ec.OperationContext,
-		field,
-		ec.fieldContext_Dossier_email,
-		func(ctx context.Context) (any, error) {
-			return obj.Email, nil
-		},
-		nil,
-		ec.marshalNString2string,
-		true,
-		true,
-	)
-}
-
-func (ec *executionContext) fieldContext_Dossier_email(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Dossier",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1291,7 +1357,7 @@ func (ec *executionContext) _Mutation_createDossier(ctx context.Context, field g
 			return ec.resolvers.Mutation().CreateDossier(ctx, fc.Args["input"].(model.CreateDossier))
 		},
 		nil,
-		ec.marshalNDossier2ᚖgithubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐDossier,
+		ec.marshalNMyDossier2ᚖgithubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐMyDossier,
 		true,
 		true,
 	)
@@ -1306,35 +1372,35 @@ func (ec *executionContext) fieldContext_Mutation_createDossier(ctx context.Cont
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_Dossier_id(ctx, field)
+				return ec.fieldContext_MyDossier_id(ctx, field)
 			case "email":
-				return ec.fieldContext_Dossier_email(ctx, field)
+				return ec.fieldContext_MyDossier_email(ctx, field)
 			case "username":
-				return ec.fieldContext_Dossier_username(ctx, field)
+				return ec.fieldContext_MyDossier_username(ctx, field)
 			case "faceType":
-				return ec.fieldContext_Dossier_faceType(ctx, field)
+				return ec.fieldContext_MyDossier_faceType(ctx, field)
 			case "skinTone":
-				return ec.fieldContext_Dossier_skinTone(ctx, field)
+				return ec.fieldContext_MyDossier_skinTone(ctx, field)
 			case "bodyType":
-				return ec.fieldContext_Dossier_bodyType(ctx, field)
+				return ec.fieldContext_MyDossier_bodyType(ctx, field)
 			case "gender":
-				return ec.fieldContext_Dossier_gender(ctx, field)
+				return ec.fieldContext_MyDossier_gender(ctx, field)
 			case "preferredColors":
-				return ec.fieldContext_Dossier_preferredColors(ctx, field)
+				return ec.fieldContext_MyDossier_preferredColors(ctx, field)
 			case "dislikedColors":
-				return ec.fieldContext_Dossier_dislikedColors(ctx, field)
+				return ec.fieldContext_MyDossier_dislikedColors(ctx, field)
 			case "viewers":
-				return ec.fieldContext_Dossier_viewers(ctx, field)
+				return ec.fieldContext_MyDossier_viewers(ctx, field)
 			case "height":
-				return ec.fieldContext_Dossier_height(ctx, field)
+				return ec.fieldContext_MyDossier_height(ctx, field)
 			case "weight":
-				return ec.fieldContext_Dossier_weight(ctx, field)
+				return ec.fieldContext_MyDossier_weight(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_Dossier_createdAt(ctx, field)
+				return ec.fieldContext_MyDossier_createdAt(ctx, field)
 			case "updatedAt":
-				return ec.fieldContext_Dossier_updatedAt(ctx, field)
+				return ec.fieldContext_MyDossier_updatedAt(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Dossier", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type MyDossier", field.Name)
 		},
 	}
 	defer func() {
@@ -1378,8 +1444,6 @@ func (ec *executionContext) fieldContext_Mutation_updateDossier(ctx context.Cont
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Dossier_id(ctx, field)
-			case "email":
-				return ec.fieldContext_Dossier_email(ctx, field)
 			case "username":
 				return ec.fieldContext_Dossier_username(ctx, field)
 			case "faceType":
@@ -1532,6 +1596,412 @@ func (ec *executionContext) fieldContext_Mutation_uploadProfilePicture(ctx conte
 	if fc.Args, err = ec.field_Mutation_uploadProfilePicture_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_id(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_id,
+		func(ctx context.Context) (any, error) {
+			return obj.ID, nil
+		},
+		nil,
+		ec.marshalNID2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_email(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_email,
+		func(ctx context.Context) (any, error) {
+			return obj.Email, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_email(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_username(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_username,
+		func(ctx context.Context) (any, error) {
+			return obj.Username, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_username(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_faceType(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_faceType,
+		func(ctx context.Context) (any, error) {
+			return obj.FaceType, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_faceType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_skinTone(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_skinTone,
+		func(ctx context.Context) (any, error) {
+			return obj.SkinTone, nil
+		},
+		nil,
+		ec.marshalNSkinTone2githubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐSkinTone,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_skinTone(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SkinTone does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_bodyType(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_bodyType,
+		func(ctx context.Context) (any, error) {
+			return obj.BodyType, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_bodyType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_gender(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_gender,
+		func(ctx context.Context) (any, error) {
+			return obj.Gender, nil
+		},
+		nil,
+		ec.marshalNGender2githubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐGender,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_gender(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Gender does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_preferredColors(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_preferredColors,
+		func(ctx context.Context) (any, error) {
+			return obj.PreferredColors, nil
+		},
+		nil,
+		ec.marshalOString2ᚕstringᚄ,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_preferredColors(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_dislikedColors(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_dislikedColors,
+		func(ctx context.Context) (any, error) {
+			return obj.DislikedColors, nil
+		},
+		nil,
+		ec.marshalOString2ᚕstringᚄ,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_dislikedColors(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_viewers(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_viewers,
+		func(ctx context.Context) (any, error) {
+			return obj.Viewers, nil
+		},
+		nil,
+		ec.marshalNString2ᚕstringᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_viewers(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_height(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_height,
+		func(ctx context.Context) (any, error) {
+			return obj.Height, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_height(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_weight(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_weight,
+		func(ctx context.Context) (any, error) {
+			return obj.Weight, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_weight(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_createdAt,
+		func(ctx context.Context) (any, error) {
+			return obj.CreatedAt, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MyDossier_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.MyDossier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MyDossier_updatedAt,
+		func(ctx context.Context) (any, error) {
+			return obj.UpdatedAt, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MyDossier_updatedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MyDossier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
 	}
 	return fc, nil
 }
@@ -2009,7 +2479,7 @@ func (ec *executionContext) _Query_getMyProfile(ctx context.Context, field graph
 			return ec.resolvers.Query().GetMyProfile(ctx)
 		},
 		nil,
-		ec.marshalNProfile2ᚖgithubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐProfile,
+		ec.marshalNMyProfile2ᚖgithubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐMyProfile,
 		true,
 		true,
 	)
@@ -2024,21 +2494,21 @@ func (ec *executionContext) fieldContext_Query_getMyProfile(_ context.Context, f
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_Profile_id(ctx, field)
+				return ec.fieldContext_MyProfile_id(ctx, field)
 			case "fullName":
-				return ec.fieldContext_Profile_fullName(ctx, field)
+				return ec.fieldContext_MyProfile_fullName(ctx, field)
 			case "username":
-				return ec.fieldContext_Profile_username(ctx, field)
-			case "accessStatus":
-				return ec.fieldContext_Profile_accessStatus(ctx, field)
+				return ec.fieldContext_MyProfile_username(ctx, field)
+			case "email":
+				return ec.fieldContext_MyProfile_email(ctx, field)
 			case "profileUrl":
-				return ec.fieldContext_Profile_profileUrl(ctx, field)
+				return ec.fieldContext_MyProfile_profileUrl(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_Profile_createdAt(ctx, field)
+				return ec.fieldContext_MyProfile_createdAt(ctx, field)
 			case "updatedAt":
-				return ec.fieldContext_Profile_updatedAt(ctx, field)
+				return ec.fieldContext_MyProfile_updatedAt(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type MyProfile", field.Name)
 		},
 	}
 	return fc, nil
@@ -2054,7 +2524,7 @@ func (ec *executionContext) _Query_getMyDossier(ctx context.Context, field graph
 			return ec.resolvers.Query().GetMyDossier(ctx)
 		},
 		nil,
-		ec.marshalNDossier2ᚖgithubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐDossier,
+		ec.marshalNMyDossier2ᚖgithubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐMyDossier,
 		true,
 		true,
 	)
@@ -2069,35 +2539,35 @@ func (ec *executionContext) fieldContext_Query_getMyDossier(_ context.Context, f
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_Dossier_id(ctx, field)
+				return ec.fieldContext_MyDossier_id(ctx, field)
 			case "email":
-				return ec.fieldContext_Dossier_email(ctx, field)
+				return ec.fieldContext_MyDossier_email(ctx, field)
 			case "username":
-				return ec.fieldContext_Dossier_username(ctx, field)
+				return ec.fieldContext_MyDossier_username(ctx, field)
 			case "faceType":
-				return ec.fieldContext_Dossier_faceType(ctx, field)
+				return ec.fieldContext_MyDossier_faceType(ctx, field)
 			case "skinTone":
-				return ec.fieldContext_Dossier_skinTone(ctx, field)
+				return ec.fieldContext_MyDossier_skinTone(ctx, field)
 			case "bodyType":
-				return ec.fieldContext_Dossier_bodyType(ctx, field)
+				return ec.fieldContext_MyDossier_bodyType(ctx, field)
 			case "gender":
-				return ec.fieldContext_Dossier_gender(ctx, field)
+				return ec.fieldContext_MyDossier_gender(ctx, field)
 			case "preferredColors":
-				return ec.fieldContext_Dossier_preferredColors(ctx, field)
+				return ec.fieldContext_MyDossier_preferredColors(ctx, field)
 			case "dislikedColors":
-				return ec.fieldContext_Dossier_dislikedColors(ctx, field)
+				return ec.fieldContext_MyDossier_dislikedColors(ctx, field)
 			case "viewers":
-				return ec.fieldContext_Dossier_viewers(ctx, field)
+				return ec.fieldContext_MyDossier_viewers(ctx, field)
 			case "height":
-				return ec.fieldContext_Dossier_height(ctx, field)
+				return ec.fieldContext_MyDossier_height(ctx, field)
 			case "weight":
-				return ec.fieldContext_Dossier_weight(ctx, field)
+				return ec.fieldContext_MyDossier_weight(ctx, field)
 			case "createdAt":
-				return ec.fieldContext_Dossier_createdAt(ctx, field)
+				return ec.fieldContext_MyDossier_createdAt(ctx, field)
 			case "updatedAt":
-				return ec.fieldContext_Dossier_updatedAt(ctx, field)
+				return ec.fieldContext_MyDossier_updatedAt(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Dossier", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type MyDossier", field.Name)
 		},
 	}
 	return fc, nil
@@ -2130,8 +2600,6 @@ func (ec *executionContext) fieldContext_Query_dossier(ctx context.Context, fiel
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Dossier_id(ctx, field)
-			case "email":
-				return ec.fieldContext_Dossier_email(ctx, field)
 			case "username":
 				return ec.fieldContext_Dossier_username(ctx, field)
 			case "faceType":
@@ -4027,11 +4495,6 @@ func (ec *executionContext) _Dossier(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "email":
-			out.Values[i] = ec._Dossier_email(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		case "username":
 			out.Values[i] = ec._Dossier_username(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -4168,6 +4631,98 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_uploadProfilePicture(ctx, field)
 			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var myDossierImplementors = []string{"MyDossier"}
+
+func (ec *executionContext) _MyDossier(ctx context.Context, sel ast.SelectionSet, obj *model.MyDossier) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, myDossierImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("MyDossier")
+		case "id":
+			out.Values[i] = ec._MyDossier_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "email":
+			out.Values[i] = ec._MyDossier_email(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "username":
+			out.Values[i] = ec._MyDossier_username(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "faceType":
+			out.Values[i] = ec._MyDossier_faceType(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "skinTone":
+			out.Values[i] = ec._MyDossier_skinTone(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "bodyType":
+			out.Values[i] = ec._MyDossier_bodyType(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "gender":
+			out.Values[i] = ec._MyDossier_gender(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "preferredColors":
+			out.Values[i] = ec._MyDossier_preferredColors(ctx, field, obj)
+		case "dislikedColors":
+			out.Values[i] = ec._MyDossier_dislikedColors(ctx, field, obj)
+		case "viewers":
+			out.Values[i] = ec._MyDossier_viewers(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "height":
+			out.Values[i] = ec._MyDossier_height(ctx, field, obj)
+		case "weight":
+			out.Values[i] = ec._MyDossier_weight(ctx, field, obj)
+		case "createdAt":
+			out.Values[i] = ec._MyDossier_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updatedAt":
+			out.Values[i] = ec._MyDossier_updatedAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -4890,6 +5445,20 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNMyDossier2githubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐMyDossier(ctx context.Context, sel ast.SelectionSet, v model.MyDossier) graphql.Marshaler {
+	return ec._MyDossier(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNMyDossier2ᚖgithubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐMyDossier(ctx context.Context, sel ast.SelectionSet, v *model.MyDossier) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._MyDossier(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNMyProfile2githubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐMyProfile(ctx context.Context, sel ast.SelectionSet, v model.MyProfile) graphql.Marshaler {

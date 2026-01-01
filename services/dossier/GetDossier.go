@@ -44,7 +44,7 @@ func (d *DossierService) GetDossier(ctx context.Context, username string) (*mode
 		return nil, errors.New("failed to decode dossier")
 	}
 
-	if slices.Contains(dossier.Viewers, profile.Username) && dossier.Email != emailID {
+	if slices.Contains(dossier.Viewers, profile.Username) {
 		return &dossier, nil
     } else {
         return nil, fmt.Errorf("you are not allowed to view this dossier")

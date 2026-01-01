@@ -28,7 +28,7 @@ func (r *mutationResolver) CreateProfile(ctx context.Context, input model.Profil
 }
 
 // CreateDossier is the resolver for the createDossier field.
-func (r *mutationResolver) CreateDossier(ctx context.Context, input model.CreateDossier) (*model.Dossier, error) {
+func (r *mutationResolver) CreateDossier(ctx context.Context, input model.CreateDossier) (*model.MyDossier, error) {
 	return r.DossierService.CreateDossier(ctx, input)
 }
 
@@ -53,12 +53,12 @@ func (r *queryResolver) Profile(ctx context.Context, username string) (*model.Pr
 }
 
 // GetMyProfile is the resolver for the getMyProfile field.
-func (r *queryResolver) GetMyProfile(ctx context.Context) (*model.Profile, error) {
+func (r *queryResolver) GetMyProfile(ctx context.Context) (*model.MyProfile, error) {
 	return r.ProfileService.GetMyProfile(ctx)
 }
 
 // GetMyDossier is the resolver for the getMyDossier field.
-func (r *queryResolver) GetMyDossier(ctx context.Context) (*model.Dossier, error) {
+func (r *queryResolver) GetMyDossier(ctx context.Context) (*model.MyDossier, error) {
 	return r.DossierService.GetMyDossier(ctx)
 }
 

@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
-func (d *DossierService) GetMyDossier(ctx context.Context) (*model.Dossier, error) {
+func (d *DossierService) GetMyDossier(ctx context.Context) (*model.MyDossier, error) {
 	emailID := ctx.Value(middleware.EmailKey).(string)
 	if emailID == "" {
 		return nil, errors.New("unauthenticated: email-id missing in headers")
@@ -27,7 +27,7 @@ func (d *DossierService) GetMyDossier(ctx context.Context) (*model.Dossier, erro
 		return nil, res.Err()
 	}
 
-	var dossier model.Dossier
+	var dossier model.MyDossier
 	if err := res.Decode(&dossier); err != nil {
 		return nil, errors.New("failed to decode dossier")
 	}

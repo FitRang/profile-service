@@ -12,7 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
-func (d *DossierService) CreateDossier(ctx context.Context, input model.CreateDossier) (*model.Dossier, error) {
+func (d *DossierService) CreateDossier(ctx context.Context, input model.CreateDossier) (*model.MyDossier, error) {
 	emailID := ctx.Value(middleware.EmailKey).(string)
 	if emailID == "" {
 		return nil, errors.New("unauthenticated: email-id missing in headers")
@@ -32,7 +32,7 @@ func (d *DossierService) CreateDossier(ctx context.Context, input model.CreateDo
 	}
 
 	now := time.Now().UTC().Format(time.RFC3339)
-	dossier := &model.Dossier{
+	dossier := &model.MyDossier{
 		Email:           emailID,
 		Username:        profile.Username,
 		FaceType:        input.FaceType,
@@ -47,7 +47,7 @@ func (d *DossierService) CreateDossier(ctx context.Context, input model.CreateDo
 		UpdatedAt:       now,
 	}
 
-	dossierDB, err := db.ToBsonDossier(dossier)
+	dossierDB, err := db.ToBsonMyDossier(dossier)
 	if err != nil {
 		return nil, err
 	}

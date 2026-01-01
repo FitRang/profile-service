@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
-func(p *ProfileService) GetMyProfile(ctx context.Context) (*model.Profile, error) {
+func(p *ProfileService) GetMyProfile(ctx context.Context) (*model.MyProfile, error) {
 	emailID := ctx.Value(middleware.EmailKey).(string)
 	if emailID == "" {
 		return nil, errors.New("unauthenticated: email-id missing in headers")
@@ -26,7 +26,7 @@ func(p *ProfileService) GetMyProfile(ctx context.Context) (*model.Profile, error
 		return nil, res.Err()
 	}
 
-	var profile model.Profile
+	var profile model.MyProfile
 	if err := res.Decode(&profile); err != nil {
 		return nil, errors.New("failed to decode profile")
 	}

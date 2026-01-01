@@ -39,9 +39,25 @@ type MyProfile {
   updatedAt: String!
 }
 
-type Dossier {
+type MyDossier {
   id: ID!
   email: String!
+  username: String!
+  faceType: String!
+  skinTone: SkinTone!
+  bodyType: String!
+  gender: Gender!
+  preferredColors: [String!]
+  dislikedColors: [String!]
+  viewers: [String!]!
+  height: String
+  weight: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Dossier {
+  id: ID!
   username: String!
   faceType: String!
   skinTone: SkinTone!
@@ -92,8 +108,8 @@ input ProfileUpdateInput {
 
 type Query {
   profile(username: String!): Profile!
-  getMyProfile: Profile!
-  getMyDossier: Dossier!
+  getMyProfile: MyProfile!
+  getMyDossier: MyDossier!
   dossier(username: String!): Dossier!
   checkUsername(username: String!): Boolean!
 }
@@ -102,7 +118,7 @@ type Mutation {
   requestAccess(username: String!): Boolean!
   grantAccess(username: String!): Boolean!
   createProfile(input: ProfileCreateInput!): MyProfile!
-  createDossier(input: CreateDossier!): Dossier!
+  createDossier(input: CreateDossier!): MyDossier!
   updateDossier(input: UpdateDossier!): Dossier!
   updateProfile(input: ProfileUpdateInput!): Profile!
   uploadProfilePicture(file: Upload!): Profile!

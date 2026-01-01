@@ -54,7 +54,6 @@ func toProtoDossier(d model.Dossier) *Dossier {
 
 	return &Dossier{
 		Id:              d.ID,
-		Email:           d.Email,
 		Username:        d.Username,
 		FaceType:        d.FaceType,
 		SkinTone:        d.SkinTone.String(),

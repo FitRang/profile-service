@@ -22,7 +22,6 @@ type CreateDossier struct {
 
 type Dossier struct {
 	ID              string   `json:"id"`
-	Email           string   `json:"email"`
 	Username        string   `json:"username"`
 	FaceType        string   `json:"faceType"`
 	SkinTone        SkinTone `json:"skinTone"`
@@ -38,6 +37,23 @@ type Dossier struct {
 }
 
 type Mutation struct {
+}
+
+type MyDossier struct {
+	ID              string   `json:"id"`
+	Email           string   `json:"email"`
+	Username        string   `json:"username"`
+	FaceType        string   `json:"faceType"`
+	SkinTone        SkinTone `json:"skinTone"`
+	BodyType        string   `json:"bodyType"`
+	Gender          Gender   `json:"gender"`
+	PreferredColors []string `json:"preferredColors,omitempty"`
+	DislikedColors  []string `json:"dislikedColors,omitempty"`
+	Viewers         []string `json:"viewers"`
+	Height          *string  `json:"height,omitempty"`
+	Weight          *string  `json:"weight,omitempty"`
+	CreatedAt       string   `json:"createdAt"`
+	UpdatedAt       string   `json:"updatedAt"`
 }
 
 type MyProfile struct {
