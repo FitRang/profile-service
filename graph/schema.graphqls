@@ -24,7 +24,7 @@ type Profile {
   fullName: String!
   username: String!
   email: String!
-  accessStatus: AccessStatus!
+  accessStatus: AccessStatus
   profileUrl: String
   createdAt: String!
   updatedAt: String!
