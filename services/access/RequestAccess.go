@@ -13,11 +13,11 @@ import (
 )
 
 func (a *AccessService) RequestAccess(ctx context.Context, username string) (bool, error) {
-    emailID, ok := ctx.Value(middleware.EmailKey).(string)
-    if !ok || emailID == "" {
-        return false, errors.New("unauthenticated: email-id missing in headers")
-    }
-	
+	emailID, ok := ctx.Value(middleware.EmailKey).(string)
+	if !ok || emailID == "" {
+		return false, errors.New("unauthenticated: email-id missing in headers")
+	}
+
 	var profile model.Profile
 	err := a.ProfileRepo.Col.FindOne(
 		ctx,
@@ -28,16 +28,17 @@ func (a *AccessService) RequestAccess(ctx context.Context, username string) (boo
 			return false, errors.New("profile not found for this user")
 		}
 		return false, err
-	} 
+	}
 
 	access := db.ToBsonAccess(username, profile.Username)
-    _, err = a.AccessRepo.Col.InsertOne(ctx, access)
-    if err != nil {
-        return false, err
-    }
+	_, err = a.AccessRepo.Col.InsertOne(ctx, access)
+	if err != nil {
+		return false, err
+	}
 
 	payload := map[string]any{
-		"requester":  profile.Username,
+		"requester": profile.Username,
+		"owner":     username,
 	}
 	b, err := jsonToBytes(payload)
 	if err != nil {
@@ -45,13 +46,13 @@ func (a *AccessService) RequestAccess(ctx context.Context, username string) (boo
 	}
 
 	err = a.Bus.Publish(
-		"notification.requested",
-		stringToByte(username),
+		"notification",
+		stringToByte("Requested: "+username),
 		b,
 	)
 	if err != nil {
 		log.Printf("failed to send message to kafka: %v", err)
 	}
 
-    return true, nil
+	return true, nil
 }

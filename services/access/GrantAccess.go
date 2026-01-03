@@ -52,7 +52,7 @@ func (a *AccessService) GrantAccess(ctx context.Context, username string) (bool,
 	}
 
 	err = a.Bus.Publish(
-		"notification.granted",
+		"notification",
 		stringToByte(username),
 		b,
 	)
