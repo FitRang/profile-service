@@ -37,11 +37,6 @@ func (r *mutationResolver) UpdateDossier(ctx context.Context, input model.Update
 	return r.DossierService.UpdateDossier(ctx, input)
 }
 
-// UpdateProfile is the resolver for the updateProfile field.
-func (r *mutationResolver) UpdateProfile(ctx context.Context, input model.ProfileUpdateInput) (*model.Profile, error) {
-	return r.ProfileService.UpdateProfile(ctx, input)
-}
-
 // UploadProfilePicture is the resolver for the uploadProfilePicture field.
 func (r *mutationResolver) UploadProfilePicture(ctx context.Context, file graphql.Upload) (*model.Profile, error) {
 	return r.ProfileService.UploadProfile(ctx, file)
@@ -80,3 +75,15 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+/*
+	func (r *mutationResolver) UpdateProfile(ctx context.Context, input model.ProfileUpdateInput) (*model.Profile, error) {
+	return r.ProfileService.UpdateProfile(ctx, input)
+}
+*/

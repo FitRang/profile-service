@@ -69,7 +69,6 @@ type ComplexityRoot struct {
 		GrantAccess          func(childComplexity int, username string) int
 		RequestAccess        func(childComplexity int, username string) int
 		UpdateDossier        func(childComplexity int, input model.UpdateDossier) int
-		UpdateProfile        func(childComplexity int, input model.ProfileUpdateInput) int
 		UploadProfilePicture func(childComplexity int, file graphql.Upload) int
 	}
 
@@ -125,7 +124,6 @@ type MutationResolver interface {
 	CreateProfile(ctx context.Context, input model.ProfileCreateInput) (*model.MyProfile, error)
 	CreateDossier(ctx context.Context, input model.CreateDossier) (*model.MyDossier, error)
 	UpdateDossier(ctx context.Context, input model.UpdateDossier) (*model.Dossier, error)
-	UpdateProfile(ctx context.Context, input model.ProfileUpdateInput) (*model.Profile, error)
 	UploadProfilePicture(ctx context.Context, file graphql.Upload) (*model.Profile, error)
 }
 type QueryResolver interface {
@@ -289,17 +287,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.UpdateDossier(childComplexity, args["input"].(model.UpdateDossier)), true
-	case "Mutation.updateProfile":
-		if e.complexity.Mutation.UpdateProfile == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_updateProfile_args(ctx, rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UpdateProfile(childComplexity, args["input"].(model.ProfileUpdateInput)), true
 	case "Mutation.uploadProfilePicture":
 		if e.complexity.Mutation.UploadProfilePicture == nil {
 			break
@@ -539,7 +526,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputCreateDossier,
 		ec.unmarshalInputProfileCreateInput,
-		ec.unmarshalInputProfileUpdateInput,
 		ec.unmarshalInputUpdateDossier,
 	)
 	first := true
@@ -705,17 +691,6 @@ func (ec *executionContext) field_Mutation_updateDossier_args(ctx context.Contex
 	var err error
 	args := map[string]any{}
 	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNUpdateDossier2githubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐUpdateDossier)
-	if err != nil {
-		return nil, err
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_updateProfile_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
-	var err error
-	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNProfileUpdateInput2githubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐProfileUpdateInput)
 	if err != nil {
 		return nil, err
 	}
@@ -1480,63 +1455,6 @@ func (ec *executionContext) fieldContext_Mutation_updateDossier(ctx context.Cont
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateDossier_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_updateProfile(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	return graphql.ResolveField(
-		ctx,
-		ec.OperationContext,
-		field,
-		ec.fieldContext_Mutation_updateProfile,
-		func(ctx context.Context) (any, error) {
-			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Mutation().UpdateProfile(ctx, fc.Args["input"].(model.ProfileUpdateInput))
-		},
-		nil,
-		ec.marshalNProfile2ᚖgithubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐProfile,
-		true,
-		true,
-	)
-}
-
-func (ec *executionContext) fieldContext_Mutation_updateProfile(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Profile_id(ctx, field)
-			case "fullName":
-				return ec.fieldContext_Profile_fullName(ctx, field)
-			case "username":
-				return ec.fieldContext_Profile_username(ctx, field)
-			case "accessStatus":
-				return ec.fieldContext_Profile_accessStatus(ctx, field)
-			case "profileUrl":
-				return ec.fieldContext_Profile_profileUrl(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Profile_createdAt(ctx, field)
-			case "updatedAt":
-				return ec.fieldContext_Profile_updatedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateProfile_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -4320,7 +4238,7 @@ func (ec *executionContext) unmarshalInputProfileCreateInput(ctx context.Context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"fullName", "email", "username"}
+	fieldsInOrder := [...]string{"fullName", "username"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -4334,13 +4252,6 @@ func (ec *executionContext) unmarshalInputProfileCreateInput(ctx context.Context
 				return it, err
 			}
 			it.FullName = data
-		case "email":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Email = data
 		case "username":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
 			data, err := ec.unmarshalNString2string(ctx, v)
@@ -4348,47 +4259,6 @@ func (ec *executionContext) unmarshalInputProfileCreateInput(ctx context.Context
 				return it, err
 			}
 			it.Username = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputProfileUpdateInput(ctx context.Context, obj any) (model.ProfileUpdateInput, error) {
-	var it model.ProfileUpdateInput
-	asMap := map[string]any{}
-	for k, v := range obj.(map[string]any) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"email", "username", "fullName"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "email":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Email = data
-		case "username":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Username = data
-		case "fullName":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fullName"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.FullName = data
 		}
 	}
 
@@ -4616,13 +4486,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "updateDossier":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateDossier(ctx, field)
-			})
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "updateProfile":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateProfile(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -5491,11 +5354,6 @@ func (ec *executionContext) marshalNProfile2ᚖgithubᚗcomᚋFoxtrotᚑ14ᚋFit
 
 func (ec *executionContext) unmarshalNProfileCreateInput2githubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐProfileCreateInput(ctx context.Context, v any) (model.ProfileCreateInput, error) {
 	res, err := ec.unmarshalInputProfileCreateInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNProfileUpdateInput2githubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐProfileUpdateInput(ctx context.Context, v any) (model.ProfileUpdateInput, error) {
-	res, err := ec.unmarshalInputProfileUpdateInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

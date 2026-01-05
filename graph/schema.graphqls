@@ -96,14 +96,7 @@ input UpdateDossier {
 
 input ProfileCreateInput {
   fullName: String!
-  email: String!
   username: String!
-}
-
-input ProfileUpdateInput {
-  email: String!
-  username: String!
-  fullName: String
 }
 
 type Query {
@@ -120,6 +113,5 @@ type Mutation {
   createProfile(input: ProfileCreateInput!): MyProfile!
   createDossier(input: CreateDossier!): MyDossier!
   updateDossier(input: UpdateDossier!): Dossier!
-  updateProfile(input: ProfileUpdateInput!): Profile!
   uploadProfilePicture(file: Upload!): Profile!
 }

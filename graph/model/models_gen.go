@@ -78,14 +78,7 @@ type Profile struct {
 
 type ProfileCreateInput struct {
 	FullName string `json:"fullName"`
-	Email    string `json:"email"`
 	Username string `json:"username"`
-}
-
-type ProfileUpdateInput struct {
-	Email    string  `json:"email"`
-	Username string  `json:"username"`
-	FullName *string `json:"fullName,omitempty"`
 }
 
 type Query struct {
