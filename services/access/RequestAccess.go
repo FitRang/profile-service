@@ -18,11 +18,11 @@ func (a *AccessService) RequestAccess(ctx context.Context, username string) (boo
 		return false, errors.New("unauthenticated: email-id missing in headers")
 	}
 
-	var profile model.Profile
+	var myProfile model.MyProfile
 	err := a.ProfileRepo.Col.FindOne(
 		ctx,
 		bson.M{"email": emailID},
-	).Decode(&profile)
+	).Decode(&myProfile)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return false, errors.New("profile not found for this user")
@@ -30,17 +30,31 @@ func (a *AccessService) RequestAccess(ctx context.Context, username string) (boo
 		return false, err
 	}
 
-	access := db.ToBsonAccess(username, profile.Username)
+	var targetProfile model.MyProfile
+	err = a.ProfileRepo.Col.FindOne(
+		ctx,
+		bson.M{"email": emailID},
+	).Decode(&targetProfile)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return false, errors.New("profile not found for this user")
+		}
+		return false, err
+	}
+
+	access := db.ToBsonAccess(username, myProfile.Username)
 	_, err = a.AccessRepo.Col.InsertOne(ctx, access)
 	if err != nil {
 		return false, err
 	}
 
-	payload := map[string]any{
-		"requester": profile.Username,
-		"owner":     username,
-	}
-	b, err := jsonToBytes(payload)
+	b, err := messageToBytes(
+		myProfile.Username,
+		myProfile.Email,
+		targetProfile.Username,
+		targetProfile.Email,
+		"has requested access",
+	)
 	if err != nil {
 		log.Printf("failed to marshal message: %v", err)
 	}

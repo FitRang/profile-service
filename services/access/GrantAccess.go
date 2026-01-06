@@ -18,6 +18,18 @@ func (a *AccessService) GrantAccess(ctx context.Context, username string) (bool,
 		return false, errors.New("unauthenticated: email-id missing in headers")
 	}
 
+	var profile model.MyProfile
+	err := a.ProfileRepo.Col.FindOne(
+		ctx,
+		bson.M{"username": username},
+	).Decode(&profile)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return false, errors.New("profile not found for this user")
+		}
+		return false, err
+	}
+
 	filter := bson.M{"email": emailID}
 	update := bson.M{
 		"$addToSet": bson.M{
@@ -29,7 +41,7 @@ func (a *AccessService) GrantAccess(ctx context.Context, username string) (bool,
 		SetReturnDocument(options.After)
 
 	var dossier model.Dossier
-	err := a.DossierRepo.Col.
+	err = a.DossierRepo.Col.
 		FindOneAndUpdate(ctx, filter, update, opts).
 		Decode(&dossier)
 
@@ -40,13 +52,13 @@ func (a *AccessService) GrantAccess(ctx context.Context, username string) (bool,
 		return false, err
 	}
 
-	ownerUsername := dossier.Username
-
-	payload := map[string]any{
-		"granter":  ownerUsername,
-		"receiver": username,
-	}
-	b, err := jsonToBytes(payload)
+	b, err := messageToBytes(
+		dossier.Username,
+		emailID,
+		profile.Username,
+		profile.Email,
+		"has granted access",
+	)
 	if err != nil {
 		log.Printf("failed to marshal message: %v", err)
 	}

@@ -24,6 +24,10 @@ func (r *ProfileRepository) InitIndexes(ctx context.Context) error {
             Keys:    bson.M{"username": 1},
             Options: options.Index().SetUnique(true),
         },
+		{
+            Keys:    bson.M{"email": 1},
+            Options: options.Index().SetUnique(true),
+        },
     }
 
     _, err := r.Col.Indexes().CreateMany(ctx, models)
