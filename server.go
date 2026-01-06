@@ -9,6 +9,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/Foxtrot-14/FitRang/profile-service/apperror"
 	"github.com/Foxtrot-14/FitRang/profile-service/cache"
 	"github.com/Foxtrot-14/FitRang/profile-service/config"
 	"github.com/Foxtrot-14/FitRang/profile-service/eventbus"
@@ -87,6 +88,7 @@ func main() {
 	srv.AddTransport(transport.GET{})
 	srv.AddTransport(transport.POST{})
 	srv.Use(&middleware.GraphQLPrometheus{})
+	srv.SetErrorPresenter(apperror.SetError)
 
 	http.Handle("/", playground.Handler("GraphQL Playground", "/query"))
 	http.Handle("/metrics", promhttp.Handler())

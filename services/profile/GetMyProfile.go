@@ -2,33 +2,52 @@ package profile
 
 import (
 	"context"
-	"errors"
-	"fmt"
 
+	"github.com/Foxtrot-14/FitRang/profile-service/apperror"
 	"github.com/Foxtrot-14/FitRang/profile-service/graph/model"
 	"github.com/Foxtrot-14/FitRang/profile-service/middleware"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
-func(p *ProfileService) GetMyProfile(ctx context.Context) (*model.MyProfile, error) {
+func (p *ProfileService) GetMyProfile(
+	ctx context.Context,
+) (*model.MyProfile, error) {
+
 	emailID := ctx.Value(middleware.EmailKey).(string)
 	if emailID == "" {
-		return nil, errors.New("unauthenticated: email-id missing in headers")
+		return nil, apperror.New(
+			apperror.Unauthenticated,
+			"Authentication required",
+		)
 	}
 
 	filter := bson.M{"email": emailID}
-	res:= p.Repo.Col.FindOne(ctx, filter)
-	if res.Err() != nil {
-		if res.Err() == mongo.ErrNoDocuments {
-			return nil, fmt.Errorf("profile not found")
+	res := p.Repo.Col.FindOne(ctx, filter)
+
+	if err := res.Err(); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, apperror.New(
+				apperror.NotFound,
+				"Profile not found",
+			)
 		}
-		return nil, res.Err()
+
+		return nil, apperror.Wrap(
+			apperror.Internal,
+			"Failed to fetch profile",
+			err,
+		)
 	}
 
 	var profile model.MyProfile
 	if err := res.Decode(&profile); err != nil {
-		return nil, errors.New("failed to decode profile")
+		return nil, apperror.Wrap(
+			apperror.Internal,
+			"Failed to decode profile",
+			err,
+		)
 	}
+
 	return &profile, nil
 }

@@ -2,9 +2,9 @@ package profile
 
 import (
 	"context"
-	"errors"
 	"time"
 
+	"github.com/Foxtrot-14/FitRang/profile-service/apperror"
 	"github.com/Foxtrot-14/FitRang/profile-service/db"
 	"github.com/Foxtrot-14/FitRang/profile-service/graph/model"
 	"github.com/Foxtrot-14/FitRang/profile-service/middleware"
@@ -15,7 +15,10 @@ import (
 func (p *ProfileService) CreateProfile(ctx context.Context, input model.ProfileCreateInput) (*model.MyProfile, error) {
 	emailID := ctx.Value(middleware.EmailKey).(string)
 	if emailID == "" {
-		return nil, errors.New("unauthenticated: email-id missing in headers")
+		return nil, apperror.New(
+			apperror.Unauthenticated,
+			"Authentication required",
+		)
 	}
 
 	now := time.Now().UTC().Format(time.RFC3339)
@@ -31,14 +34,20 @@ func (p *ProfileService) CreateProfile(ctx context.Context, input model.ProfileC
 	resp, err := p.Repo.Col.InsertOne(ctx, bsonProfile)
 	if err != nil {
 		if mongo.IsDuplicateKeyError(err) {
-			return nil, errors.New("profile already exists")
+			return nil, apperror.New(
+				apperror.Conflict,
+				"Profile already exists",
+			)
 		}
-		return nil, err
 	}
 
 	oid, ok := resp.InsertedID.(bson.ObjectID)
 	if !ok {
-		return nil, errors.New("failed to convert inserted ID to ObjectID")
+		return nil, apperror.Wrap(
+			apperror.Internal,
+			"Failed to create profile",
+			err,
+		)
 	}
 
 	gqlProfile := &model.Profile{
