@@ -9,27 +9,27 @@ import (
 )
 
 type ProfileRepository struct {
-    Col *mongo.Collection
+	Col *mongo.Collection
 }
 
 func NewProfileRepository(db *mongo.Database) *ProfileRepository {
-    return &ProfileRepository{
-        Col: db.Collection("profiles"),
-    }
+	return &ProfileRepository{
+		Col: db.Collection("profiles"),
+	}
 }
 
 func (r *ProfileRepository) InitIndexes(ctx context.Context) error {
-    models := []mongo.IndexModel{
-        {
-            Keys:    bson.M{"username": 1},
-            Options: options.Index().SetUnique(true),
-        },
+	models := []mongo.IndexModel{
 		{
-            Keys:    bson.M{"email": 1},
-            Options: options.Index().SetUnique(true),
-        },
-    }
+			Keys:    bson.M{"username": 1},
+			Options: options.Index().SetUnique(true),
+		},
+		{
+			Keys:    bson.M{"email": 1},
+			Options: options.Index().SetUnique(true),
+		},
+	}
 
-    _, err := r.Col.Indexes().CreateMany(ctx, models)
-    return err
+	_, err := r.Col.Indexes().CreateMany(ctx, models)
+	return err
 }

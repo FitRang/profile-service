@@ -16,9 +16,9 @@ func (e *EventBus) NewProducer() (*Producer, error) {
 		"bootstrap.servers": e.cfg.Brokers,
 		"security.protocol": "PLAINTEXT",
 
-		"acks":              "all",
+		"acks":               "all",
 		"enable.idempotence": true,
-		"retries":           5,
+		"retries":            5,
 	})
 
 	if err != nil {

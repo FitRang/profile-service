@@ -7,12 +7,12 @@ import (
 
 type ProfileService struct {
 	Repo *repository.ProfileRepository
-	Bus	 *eventbus.Producer	
+	Bus  *eventbus.Producer
 }
 
 func NewProfileService(r *repository.ProfileRepository, b *eventbus.Producer) *ProfileService {
 	return &ProfileService{
 		Repo: r,
-		Bus: b,
+		Bus:  b,
 	}
 }

@@ -64,12 +64,12 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateDossier        func(childComplexity int, input model.CreateDossier) int
-		CreateProfile        func(childComplexity int, input model.ProfileCreateInput) int
-		GrantAccess          func(childComplexity int, username string) int
-		RequestAccess        func(childComplexity int, username string) int
-		UpdateDossier        func(childComplexity int, input model.UpdateDossier) int
-		UploadProfilePicture func(childComplexity int, file graphql.Upload) int
+		CreateDossier func(childComplexity int, input model.CreateDossier) int
+		CreateProfile func(childComplexity int, input model.ProfileCreateInput) int
+		GrantAccess   func(childComplexity int, username string) int
+		RequestAccess func(childComplexity int, username string) int
+		UpdateAvatar  func(childComplexity int) int
+		UpdateDossier func(childComplexity int, input model.UpdateDossier) int
 	}
 
 	MyDossier struct {
@@ -124,7 +124,7 @@ type MutationResolver interface {
 	CreateProfile(ctx context.Context, input model.ProfileCreateInput) (*model.MyProfile, error)
 	CreateDossier(ctx context.Context, input model.CreateDossier) (*model.MyDossier, error)
 	UpdateDossier(ctx context.Context, input model.UpdateDossier) (*model.Dossier, error)
-	UploadProfilePicture(ctx context.Context, file graphql.Upload) (*model.Profile, error)
+	UpdateAvatar(ctx context.Context) (string, error)
 }
 type QueryResolver interface {
 	Profile(ctx context.Context, username string) (*model.Profile, error)
@@ -276,6 +276,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.RequestAccess(childComplexity, args["username"].(string)), true
+	case "Mutation.updateAvatar":
+		if e.complexity.Mutation.UpdateAvatar == nil {
+			break
+		}
+
+		return e.complexity.Mutation.UpdateAvatar(childComplexity), true
 	case "Mutation.updateDossier":
 		if e.complexity.Mutation.UpdateDossier == nil {
 			break
@@ -287,17 +293,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.UpdateDossier(childComplexity, args["input"].(model.UpdateDossier)), true
-	case "Mutation.uploadProfilePicture":
-		if e.complexity.Mutation.UploadProfilePicture == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_uploadProfilePicture_args(ctx, rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UploadProfilePicture(childComplexity, args["file"].(graphql.Upload)), true
 
 	case "MyDossier.bodyType":
 		if e.complexity.MyDossier.BodyType == nil {
@@ -695,17 +690,6 @@ func (ec *executionContext) field_Mutation_updateDossier_args(ctx context.Contex
 		return nil, err
 	}
 	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_uploadProfilePicture_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
-	var err error
-	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "file", ec.unmarshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload)
-	if err != nil {
-		return nil, err
-	}
-	args["file"] = arg0
 	return args, nil
 }
 
@@ -1461,59 +1445,31 @@ func (ec *executionContext) fieldContext_Mutation_updateDossier(ctx context.Cont
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_uploadProfilePicture(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_updateAvatar(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
 		ec.OperationContext,
 		field,
-		ec.fieldContext_Mutation_uploadProfilePicture,
+		ec.fieldContext_Mutation_updateAvatar,
 		func(ctx context.Context) (any, error) {
-			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Mutation().UploadProfilePicture(ctx, fc.Args["file"].(graphql.Upload))
+			return ec.resolvers.Mutation().UpdateAvatar(ctx)
 		},
 		nil,
-		ec.marshalNProfile2ᚖgithubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐProfile,
+		ec.marshalNString2string,
 		true,
 		true,
 	)
 }
 
-func (ec *executionContext) fieldContext_Mutation_uploadProfilePicture(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_updateAvatar(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Profile_id(ctx, field)
-			case "fullName":
-				return ec.fieldContext_Profile_fullName(ctx, field)
-			case "username":
-				return ec.fieldContext_Profile_username(ctx, field)
-			case "accessStatus":
-				return ec.fieldContext_Profile_accessStatus(ctx, field)
-			case "profileUrl":
-				return ec.fieldContext_Profile_profileUrl(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Profile_createdAt(ctx, field)
-			case "updatedAt":
-				return ec.fieldContext_Profile_updatedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
+			return nil, errors.New("field of type String does not have child fields")
 		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_uploadProfilePicture_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
 	}
 	return fc, nil
 }
@@ -4490,9 +4446,9 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "uploadProfilePicture":
+		case "updateAvatar":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_uploadProfilePicture(ctx, field)
+				return ec._Mutation_updateAvatar(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -5416,22 +5372,6 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 func (ec *executionContext) unmarshalNUpdateDossier2githubᚗcomᚋFoxtrotᚑ14ᚋFitRangᚋprofileᚑserviceᚋgraphᚋmodelᚐUpdateDossier(ctx context.Context, v any) (model.UpdateDossier, error) {
 	res, err := ec.unmarshalInputUpdateDossier(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx context.Context, v any) (graphql.Upload, error) {
-	res, err := graphql.UnmarshalUpload(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx context.Context, sel ast.SelectionSet, v graphql.Upload) graphql.Marshaler {
-	_ = sel
-	res := graphql.MarshalUpload(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

@@ -30,8 +30,8 @@ import (
 )
 
 var (
-	restPort    string = "8080"
-	rpcPort     string = "8081"
+	restPort string = "8080"
+	rpcPort  string = "8081"
 )
 
 func main() {
@@ -40,7 +40,7 @@ func main() {
 	kafkaCfg := config.LoadKafkaConfig()
 
 	eventBus, err := eventbus.NewEventBus(eventbus.Config{
-		Brokers:  kafkaCfg.Brokers,
+		Brokers: kafkaCfg.Brokers,
 	})
 	if err != nil {
 		log.Fatalf("failed to init event bus: %v", err)
@@ -61,7 +61,10 @@ func main() {
 	db := client.Database("profile-service")
 
 	profileRepo := repository.NewProfileRepository(db)
-	profileService := profile.NewProfileService(profileRepo, kafkaProducer)
+	profileService := profile.NewProfileService(
+		profileRepo,
+		kafkaProducer,
+	)
 
 	dossierRepo := repository.NewDossierRepository(db)
 	dossierService := dossier.NewDossierService(dossierRepo, profileRepo)

@@ -1,5 +1,3 @@
-scalar Upload
-
 enum AccessStatus {
   YES
   NO
@@ -113,5 +111,5 @@ type Mutation {
   createProfile(input: ProfileCreateInput!): MyProfile!
   createDossier(input: CreateDossier!): MyDossier!
   updateDossier(input: UpdateDossier!): Dossier!
-  uploadProfilePicture(file: Upload!): Profile!
+  updateAvatar: String!
 }

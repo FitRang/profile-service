@@ -14,7 +14,7 @@ type Dossier struct {
 	Gender          string             `bson:"gender"`
 	PreferredColors []string           `bson:"preferredColors"`
 	DislikedColors  []string           `bson:"dislikedColors"`
-	Viewers			[]string		   `bson:"viewers"`
+	Viewers         []string           `bson:"viewers"`
 	Height          *string            `bson:"height,omitempty"`
 	Weight          *string            `bson:"weight,omitempty"`
 	CreatedAt       string             `bson:"createdAt"`
@@ -31,7 +31,7 @@ type MyDossier struct {
 	Gender          string             `bson:"gender"`
 	PreferredColors []string           `bson:"preferredColors"`
 	DislikedColors  []string           `bson:"dislikedColors"`
-	Viewers			[]string		   `bson:"viewers"`
+	Viewers         []string           `bson:"viewers"`
 	Height          *string            `bson:"height,omitempty"`
 	Weight          *string            `bson:"weight,omitempty"`
 	CreatedAt       string             `bson:"createdAt"`
@@ -54,20 +54,20 @@ func ToBsonDossier(m *model.Dossier) (Dossier, error) {
 	}
 
 	viewers := m.Viewers
-    if viewers == nil {
-        viewers = []string{}
-    }
+	if viewers == nil {
+		viewers = []string{}
+	}
 
 	return Dossier{
 		ID:              oid,
-		Username:		 m.Username,
+		Username:        m.Username,
 		FaceType:        m.FaceType,
 		SkinTone:        string(m.SkinTone),
 		BodyType:        m.BodyType,
 		Gender:          string(m.Gender),
 		PreferredColors: m.PreferredColors,
 		DislikedColors:  m.DislikedColors,
-		Viewers:		 viewers,
+		Viewers:         viewers,
 		Height:          m.Height,
 		Weight:          m.Weight,
 		CreatedAt:       m.CreatedAt,
@@ -91,21 +91,21 @@ func ToBsonMyDossier(m *model.MyDossier) (MyDossier, error) {
 	}
 
 	viewers := m.Viewers
-    if viewers == nil {
-        viewers = []string{}
-    }
+	if viewers == nil {
+		viewers = []string{}
+	}
 
 	return MyDossier{
 		ID:              oid,
-		Email:			 m.Email,
-		Username:		 m.Username,
+		Email:           m.Email,
+		Username:        m.Username,
 		FaceType:        m.FaceType,
 		SkinTone:        string(m.SkinTone),
 		BodyType:        m.BodyType,
 		Gender:          string(m.Gender),
 		PreferredColors: m.PreferredColors,
 		DislikedColors:  m.DislikedColors,
-		Viewers:		 viewers,
+		Viewers:         viewers,
 		Height:          m.Height,
 		Weight:          m.Weight,
 		CreatedAt:       m.CreatedAt,

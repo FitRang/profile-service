@@ -9,12 +9,12 @@ func toProtoProfile(p model.Profile) *Profile {
 	}
 
 	return &Profile{
-		Id:           p.ID,
-		FullName:     p.FullName,
-		Username:     p.Username,
-		ProfileUrl:   profileURL,
-		CreatedAt:    p.CreatedAt,
-		UpdatedAt:    p.UpdatedAt,
+		Id:         p.ID,
+		FullName:   p.FullName,
+		Username:   p.Username,
+		ProfileUrl: profileURL,
+		CreatedAt:  p.CreatedAt,
+		UpdatedAt:  p.UpdatedAt,
 	}
 }
 

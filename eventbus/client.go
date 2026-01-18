@@ -3,7 +3,7 @@ package eventbus
 import "github.com/confluentinc/confluent-kafka-go/kafka"
 
 type Config struct {
-	Brokers  string
+	Brokers string
 }
 
 type EventBus struct {
@@ -13,8 +13,8 @@ type EventBus struct {
 
 func NewEventBus(cfg Config) (*EventBus, error) {
 	conf := &kafka.ConfigMap{
-		"bootstrap.servers": cfg.Brokers,
-		"security.protocol": "PLAINTEXT",
+		"bootstrap.servers":   cfg.Brokers,
+		"security.protocol":   "PLAINTEXT",
 		"api.version.request": true,
 	}
 

@@ -8,7 +8,6 @@ package graph
 import (
 	"context"
 
-	"github.com/99designs/gqlgen/graphql"
 	"github.com/Foxtrot-14/FitRang/profile-service/graph/model"
 )
 
@@ -37,9 +36,9 @@ func (r *mutationResolver) UpdateDossier(ctx context.Context, input model.Update
 	return r.DossierService.UpdateDossier(ctx, input)
 }
 
-// UploadProfilePicture is the resolver for the uploadProfilePicture field.
-func (r *mutationResolver) UploadProfilePicture(ctx context.Context, file graphql.Upload) (*model.Profile, error) {
-	return r.ProfileService.UploadProfile(ctx, file)
+// UpdateAvatar is the resolver for the updateAvatar field.
+func (r *mutationResolver) UpdateAvatar(ctx context.Context) (string, error) {
+	return r.ProfileService.UpdateAvatar(ctx)
 }
 
 // Profile is the resolver for the profile field.
@@ -73,5 +72,7 @@ func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
-type mutationResolver struct{ *Resolver }
-type queryResolver struct{ *Resolver }
+type (
+	mutationResolver struct{ *Resolver }
+	queryResolver    struct{ *Resolver }
+)

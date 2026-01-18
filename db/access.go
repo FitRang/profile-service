@@ -7,7 +7,7 @@ type Access struct {
 
 func ToBsonAccess(username, requester string) Access {
 	return Access{
-		Username: username,
+		Username:  username,
 		Requester: requester,
 	}
 }
