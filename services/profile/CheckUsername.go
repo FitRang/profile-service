@@ -10,7 +10,7 @@ import (
 func (p *ProfileService) CheckUsername(ctx context.Context, username string) (bool, error) {
 	filter := bson.M{"username": username}
 
-	err := p.Repo.Col.FindOne(ctx, filter).Err()
+	err := p.ProfileRepo.Col.FindOne(ctx, filter).Err()
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return false, nil

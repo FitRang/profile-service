@@ -30,7 +30,7 @@ func (p *ProfileService) CreateProfile(
 		UpdatedAt: now,
 	}
 
-	resp, err := p.Repo.Col.InsertOne(ctx, bsonProfile)
+	resp, err := p.ProfileRepo.Col.InsertOne(ctx, bsonProfile)
 	if err != nil {
 		if mongo.IsDuplicateKeyError(err) {
 			return nil, apperror.New(

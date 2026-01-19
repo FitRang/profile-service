@@ -19,7 +19,7 @@ func (p *ProfileService) UpdateAvatar(ctx context.Context) (string, error) {
 		)
 	}
 	filter := bson.M{"email": emailID}
-	res := p.Repo.Col.FindOne(ctx, filter)
+	res := p.ProfileRepo.Col.FindOne(ctx, filter)
 	if err := res.Err(); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return "", apperror.New(

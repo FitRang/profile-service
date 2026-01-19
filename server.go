@@ -60,16 +60,16 @@ func main() {
 
 	db := client.Database("profile-service")
 
+	dossierRepo := repository.NewDossierRepository(db)
 	profileRepo := repository.NewProfileRepository(db)
+	accessRepo := repository.NewAccessRepository(db)
 	profileService := profile.NewProfileService(
 		profileRepo,
 		kafkaProducer,
+		dossierRepo,
+		accessRepo,
 	)
-
-	dossierRepo := repository.NewDossierRepository(db)
 	dossierService := dossier.NewDossierService(dossierRepo, profileRepo)
-
-	accessRepo := repository.NewAccessRepository(db)
 	accessService := access.NewAccessService(accessRepo, dossierRepo, profileRepo, kafkaProducer)
 	repository.Init(db)
 

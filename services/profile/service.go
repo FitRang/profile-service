@@ -6,13 +6,22 @@ import (
 )
 
 type ProfileService struct {
-	Repo *repository.ProfileRepository
-	Bus  *eventbus.Producer
+	ProfileRepo *repository.ProfileRepository
+	DossierRepo *repository.DossierRepository
+	AccessRepo  *repository.AccessRepository
+	Bus         *eventbus.Producer
 }
 
-func NewProfileService(r *repository.ProfileRepository, b *eventbus.Producer) *ProfileService {
+func NewProfileService(
+	r *repository.ProfileRepository,
+	b *eventbus.Producer,
+	d *repository.DossierRepository,
+	a *repository.AccessRepository,
+) *ProfileService {
 	return &ProfileService{
-		Repo: r,
-		Bus:  b,
+		ProfileRepo: r,
+		Bus:         b,
+		DossierRepo: d,
+		AccessRepo:  a,
 	}
 }

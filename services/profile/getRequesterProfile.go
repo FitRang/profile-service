@@ -10,14 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
-func (p *ProfileService) GetMyProfile(
-	ctx context.Context,
-) (*model.MyProfile, error) {
-	emailID, err := getEmailFromContext(ctx)
-	if err != nil {
-		return nil, err
-	}
-
+func (p *ProfileService) getRequesterProfile(ctx context.Context, emailID string) (*model.MyProfile, error) {
 	filter := bson.M{"email": emailID}
 	res := p.ProfileRepo.Col.FindOne(ctx, filter)
 	if err := res.Err(); err != nil {
@@ -27,7 +20,6 @@ func (p *ProfileService) GetMyProfile(
 				"Profile not found",
 			)
 		}
-
 		return nil, apperror.Wrap(
 			apperror.Internal,
 			"Failed to fetch profile",
