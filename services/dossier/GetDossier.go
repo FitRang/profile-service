@@ -22,7 +22,6 @@ func (d *DossierService) GetDossier(ctx context.Context, username string) (*mode
 		ctx,
 		bson.M{"email": emailID},
 	).Decode(&profile)
-
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, errors.New("profile not found for this user")

@@ -7,18 +7,17 @@ import (
 	"github.com/Foxtrot-14/FitRang/profile-service/apperror"
 	"github.com/Foxtrot-14/FitRang/profile-service/db"
 	"github.com/Foxtrot-14/FitRang/profile-service/graph/model"
-	"github.com/Foxtrot-14/FitRang/profile-service/middleware"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
-func (p *ProfileService) CreateProfile(ctx context.Context, input model.ProfileCreateInput) (*model.MyProfile, error) {
-	emailID := ctx.Value(middleware.EmailKey).(string)
-	if emailID == "" {
-		return nil, apperror.New(
-			apperror.Unauthenticated,
-			"Authentication required",
-		)
+func (p *ProfileService) CreateProfile(
+	ctx context.Context,
+	input model.ProfileCreateInput,
+) (*model.MyProfile, error) {
+	emailID, err := getEmailFromContext(ctx)
+	if err != nil {
+		return nil, err
 	}
 
 	now := time.Now().UTC().Format(time.RFC3339)
@@ -59,7 +58,8 @@ func (p *ProfileService) CreateProfile(ctx context.Context, input model.ProfileC
 		UpdatedAt:  bsonProfile.UpdatedAt,
 	}
 
-	p.sendProfileToIndex(*gqlProfile)
+	go p.sendProfileToIndex(*gqlProfile)
+
 	return &model.MyProfile{
 		ID:         oid.Hex(),
 		Username:   bsonProfile.Username,

@@ -14,7 +14,6 @@ func (p *ProfileService) GetProfile(
 	ctx context.Context,
 	username string,
 ) (*model.Profile, error) {
-
 	emailID, ok := ctx.Value(middleware.EmailKey).(string)
 	if !ok || emailID == "" {
 		return nil, apperror.New(
@@ -50,7 +49,7 @@ func (p *ProfileService) GetProfile(
 		)
 	}
 
-	//TODO: check if has access
+	// TODO: check if has access
 	profile.AccessStatus = model.AccessStatusNo
 	return &profile, nil
 }
