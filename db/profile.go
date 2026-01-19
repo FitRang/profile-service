@@ -31,6 +31,22 @@ func ToGraphQLProfile(p *Profile) *model.MyProfile {
 	}
 }
 
+func ToGraphQLProfilePrivate(p *Profile) *model.Profile {
+	if p == nil {
+		return nil
+	}
+
+	return &model.Profile{
+		ID:           p.ID.Hex(),
+		AccessStatus: "",
+		Username:     p.Username,
+		FullName:     p.FullName,
+		ProfileURL:   p.ProfileURL,
+		CreatedAt:    p.CreatedAt,
+		UpdatedAt:    p.UpdatedAt,
+	}
+}
+
 func ToBsonProfile(p *model.Profile) (Profile, error) {
 	if p == nil {
 		return Profile{}, nil

@@ -2,9 +2,11 @@ package profile
 
 import (
 	"context"
+	"log"
 	"slices"
 
 	"github.com/Foxtrot-14/FitRang/profile-service/apperror"
+	"github.com/Foxtrot-14/FitRang/profile-service/db"
 	"github.com/Foxtrot-14/FitRang/profile-service/graph/model"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -34,12 +36,11 @@ func (p *ProfileService) GetProfile(
 		}
 		return nil, apperror.Wrap(
 			apperror.Internal,
-			"Failed to fetch profile",
+			"Failed to fetch the profile",
 			err,
 		)
 	}
-
-	var profile model.Profile
+	var profile db.Profile
 	if err := res.Decode(&profile); err != nil {
 		return nil, apperror.Wrap(
 			apperror.Internal,
@@ -47,16 +48,19 @@ func (p *ProfileService) GetProfile(
 			err,
 		)
 	}
+	profileJSON := db.ToGraphQLProfilePrivate(&profile)
 
 	filter = bson.M{"username": username}
 	res = p.DossierRepo.Col.FindOne(ctx, filter)
 	if err := res.Err(); err != nil {
 		if err == mongo.ErrNoDocuments {
-			profile.AccessStatus = model.AccessStatusNo
+			profileJSON.AccessStatus = model.AccessStatusNo
+			return profileJSON, nil
 		}
+		log.Printf("%v\n", err)
 		return nil, apperror.Wrap(
 			apperror.Internal,
-			"Failed to fetch profile",
+			"Failed to fetch dossier",
 			err,
 		)
 	}
@@ -71,23 +75,26 @@ func (p *ProfileService) GetProfile(
 	}
 
 	filter = bson.M{
-		"owner":     profile.Username,
-		"requester": reqProfile,
+		"username":  profile.Username,
+		"requester": reqProfile.Username,
 	}
 	res = p.AccessRepo.Col.FindOne(ctx, filter)
 	if err := res.Err(); err != nil {
 		if err == mongo.ErrNoDocuments {
-			profile.AccessStatus = model.AccessStatusRequested
+			if slices.Contains(dossier.Viewers, reqProfile.Username) {
+				profileJSON.AccessStatus = model.AccessStatusYes
+				return profileJSON, nil
+			}
+			profileJSON.AccessStatus = model.AccessStatusNo
+			return profileJSON, nil
 		}
 		return nil, apperror.Wrap(
 			apperror.Internal,
 			"Failed to fetch record",
 			err,
 		)
+	} else {
+		profileJSON.AccessStatus = model.AccessStatusRequested
+		return profileJSON, nil
 	}
-	if slices.Contains(dossier.Viewers, reqProfile.Username) {
-		profile.AccessStatus = model.AccessStatusYes
-	}
-	profile.AccessStatus = model.AccessStatusNo
-	return &profile, nil
 }

@@ -22,7 +22,7 @@ func (p *ProfileService) getRequesterProfile(ctx context.Context, emailID string
 		}
 		return nil, apperror.Wrap(
 			apperror.Internal,
-			"Failed to fetch profile",
+			"Failed to fetch requester profile",
 			err,
 		)
 	}
