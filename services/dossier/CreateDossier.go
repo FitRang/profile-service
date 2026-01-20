@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/Foxtrot-14/FitRang/profile-service/apperror"
 	"github.com/Foxtrot-14/FitRang/profile-service/db"
 	"github.com/Foxtrot-14/FitRang/profile-service/graph/model"
 	"github.com/Foxtrot-14/FitRang/profile-service/middleware"
@@ -23,7 +24,6 @@ func (d *DossierService) CreateDossier(ctx context.Context, input model.CreateDo
 		ctx,
 		bson.M{"email": emailID},
 	).Decode(&profile)
-
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, errors.New("profile not found for this user")
@@ -52,7 +52,7 @@ func (d *DossierService) CreateDossier(ctx context.Context, input model.CreateDo
 		return nil, err
 	}
 
-	_, err = d.DossierRepo.Col.InsertOne(ctx, dossierDB)
+	resp, err := d.DossierRepo.Col.InsertOne(ctx, dossierDB)
 	if err != nil {
 		if mongo.IsDuplicateKeyError(err) {
 			return nil, errors.New("dossier already exists for this user")
@@ -60,5 +60,14 @@ func (d *DossierService) CreateDossier(ctx context.Context, input model.CreateDo
 
 		return nil, err
 	}
+	oid, ok := resp.InsertedID.(bson.ObjectID)
+	if !ok {
+		return nil, apperror.Wrap(
+			apperror.Internal,
+			"Failed to create profile",
+			err,
+		)
+	}
+	dossier.ID = oid.Hex()
 	return dossier, nil
 }

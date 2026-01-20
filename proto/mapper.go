@@ -2,7 +2,7 @@ package proto
 
 import "github.com/Foxtrot-14/FitRang/profile-service/graph/model"
 
-func toProtoProfile(p model.Profile) *Profile {
+func toProtoProfile(p model.MyProfile) *Profile {
 	var profileURL string
 	if p.ProfileURL != nil {
 		profileURL = *p.ProfileURL
@@ -11,6 +11,7 @@ func toProtoProfile(p model.Profile) *Profile {
 	return &Profile{
 		Id:         p.ID,
 		FullName:   p.FullName,
+		Email:      p.Email,
 		Username:   p.Username,
 		ProfileUrl: profileURL,
 		CreatedAt:  p.CreatedAt,
@@ -18,7 +19,7 @@ func toProtoProfile(p model.Profile) *Profile {
 	}
 }
 
-func toProtoProfiles(profiles []model.Profile) []*Profile {
+func toProtoProfiles(profiles []model.MyProfile) []*Profile {
 	out := make([]*Profile, 0, len(profiles))
 	for _, p := range profiles {
 		out = append(out, toProtoProfile(p))

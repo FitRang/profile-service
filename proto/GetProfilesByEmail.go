@@ -4,6 +4,8 @@ import (
 	"context"
 	"log"
 
+	"github.com/Foxtrot-14/FitRang/profile-service/db"
+	"github.com/Foxtrot-14/FitRang/profile-service/graph/model"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -12,7 +14,6 @@ func (s *ProfileGRPCService) GetProfilesByEmail(
 	ctx context.Context,
 	req *GetByEmailRequest,
 ) (*GetProfilesResponse, error) {
-
 	email := req.GetEmail()
 	if email == "" {
 		return nil, status.Error(codes.InvalidArgument, "email is required")
@@ -24,7 +25,8 @@ func (s *ProfileGRPCService) GetProfilesByEmail(
 	}
 
 	for _, dossier := range dossiers {
-		if err := s.rdb.StoreDossier(ctx, dossier.Username, dossier); err != nil {
+		dossierJSON := db.ToGraphQLDossier(&dossier)
+		if err := s.rdb.StoreDossier(ctx, dossierJSON.Username, *dossierJSON); err != nil {
 			log.Printf(
 				"[WARN] failed to cache dossier %s: %v",
 				dossier.Username,
@@ -33,7 +35,13 @@ func (s *ProfileGRPCService) GetProfilesByEmail(
 		}
 	}
 
+	var profilesJSON []model.MyProfile
+	for _, profile := range profiles {
+		profileJSON := db.ToGraphQLProfile(&profile)
+		profilesJSON = append(profilesJSON, *profileJSON)
+	}
+
 	return &GetProfilesResponse{
-		Profile: toProtoProfiles(profiles),
+		Profile: toProtoProfiles(profilesJSON),
 	}, nil
 }

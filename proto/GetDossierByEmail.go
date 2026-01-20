@@ -14,7 +14,6 @@ func (s *ProfileGRPCService) GetDossierByEmail(
 	ctx context.Context,
 	req *GetByEmailRequest,
 ) (*GetDossierResponse, error) {
-
 	email := req.GetEmail()
 	if email == "" {
 		return nil, status.Error(codes.InvalidArgument, "email is required")
@@ -31,7 +30,6 @@ func (s *ProfileGRPCService) GetDossierByEmail(
 		ctx,
 		bson.M{"email": email},
 	).Decode(&dossier)
-
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, status.Error(codes.NotFound, "dossier not found")

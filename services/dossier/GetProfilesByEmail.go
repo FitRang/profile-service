@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/Foxtrot-14/FitRang/profile-service/db"
 	"github.com/Foxtrot-14/FitRang/profile-service/graph/model"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -12,8 +13,7 @@ import (
 func (d *DossierService) GetProfilesByEmail(
 	ctx context.Context,
 	email string,
-) ([]model.Profile, []model.Dossier, error) {
-
+) ([]db.Profile, []db.Dossier, error) {
 	var requesterProfile model.Profile
 	if err := d.ProfileRepo.Col.FindOne(
 		ctx,
@@ -46,8 +46,8 @@ func (d *DossierService) GetProfilesByEmail(
 	defer cursor.Close(ctx)
 
 	type aggResult struct {
-		model.Dossier `bson:",inline"`
-		Profile       model.Profile `bson:"profile"`
+		db.Dossier `bson:",inline"`
+		Profile    db.Profile `bson:"profile"`
 	}
 
 	var aggResults []aggResult
@@ -55,8 +55,8 @@ func (d *DossierService) GetProfilesByEmail(
 		return nil, nil, err
 	}
 
-	profiles := make([]model.Profile, 0, len(aggResults))
-	dossiers := make([]model.Dossier, 0, len(aggResults))
+	profiles := make([]db.Profile, 0, len(aggResults))
+	dossiers := make([]db.Dossier, 0, len(aggResults))
 
 	for _, r := range aggResults {
 		profiles = append(profiles, r.Profile)

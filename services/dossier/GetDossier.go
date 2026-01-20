@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/Foxtrot-14/FitRang/profile-service/db"
 	"github.com/Foxtrot-14/FitRang/profile-service/graph/model"
 	"github.com/Foxtrot-14/FitRang/profile-service/middleware"
 	"go.mongodb.org/mongo-driver/v2/bson"
@@ -38,13 +39,15 @@ func (d *DossierService) GetDossier(ctx context.Context, username string) (*mode
 		return nil, res.Err()
 	}
 
-	var dossier model.Dossier
+	var dossier db.Dossier
 	if err := res.Decode(&dossier); err != nil {
 		return nil, errors.New("failed to decode dossier")
 	}
 
+	dossierJSON := db.ToGraphQLDossier(&dossier)
+
 	if slices.Contains(dossier.Viewers, profile.Username) {
-		return &dossier, nil
+		return dossierJSON, nil
 	} else {
 		return nil, fmt.Errorf("you are not allowed to view this dossier")
 	}

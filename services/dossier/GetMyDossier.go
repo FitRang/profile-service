@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/Foxtrot-14/FitRang/profile-service/db"
 	"github.com/Foxtrot-14/FitRang/profile-service/graph/model"
 	"github.com/Foxtrot-14/FitRang/profile-service/middleware"
 	"go.mongodb.org/mongo-driver/v2/bson"
@@ -27,10 +28,10 @@ func (d *DossierService) GetMyDossier(ctx context.Context) (*model.MyDossier, er
 		return nil, res.Err()
 	}
 
-	var dossier model.MyDossier
+	var dossier db.MyDossier
 	if err := res.Decode(&dossier); err != nil {
 		return nil, errors.New("failed to decode dossier")
 	}
-
-	return &dossier, nil
+	dossierJSON := db.ToGraphQLMyDossier(&dossier)
+	return dossierJSON, nil
 }

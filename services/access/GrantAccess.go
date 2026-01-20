@@ -44,7 +44,6 @@ func (a *AccessService) GrantAccess(ctx context.Context, username string) (bool,
 	err = a.DossierRepo.Col.
 		FindOneAndUpdate(ctx, filter, update, opts).
 		Decode(&dossier)
-
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return false, errors.New("this user does not have a dossier")
@@ -70,6 +69,25 @@ func (a *AccessService) GrantAccess(ctx context.Context, username string) (bool,
 	)
 	if err != nil {
 		log.Printf("failed to send message to kafka: %v", err)
+	}
+
+	filter = bson.M{
+		"username":  dossier.Username,
+		"requester": profile.Username,
+	}
+
+	res, err := a.AccessRepo.Col.DeleteOne(ctx, filter)
+	if err != nil {
+		log.Printf("failed to delete access request: %v", err)
+		return false, err
+	}
+
+	if res.DeletedCount == 0 {
+		log.Printf(
+			"access request not found while deleting (username=%s, requester=%s)",
+			dossier.Username,
+			profile.Username,
+		)
 	}
 
 	return true, nil
