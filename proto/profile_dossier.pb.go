@@ -117,6 +117,50 @@ func (x *GetByEmailRequest) GetEmail() string {
 	return ""
 }
 
+type GetByUsernameRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetByUsernameRequest) Reset() {
+	*x = GetByUsernameRequest{}
+	mi := &file_profile_dossier_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetByUsernameRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetByUsernameRequest) ProtoMessage() {}
+
+func (x *GetByUsernameRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_profile_dossier_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetByUsernameRequest.ProtoReflect.Descriptor instead.
+func (*GetByUsernameRequest) Descriptor() ([]byte, []int) {
+	return file_profile_dossier_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *GetByUsernameRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
 type GetProfilesResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Profile       []*Profile             `protobuf:"bytes,1,rep,name=profile,proto3" json:"profile,omitempty"`
@@ -126,7 +170,7 @@ type GetProfilesResponse struct {
 
 func (x *GetProfilesResponse) Reset() {
 	*x = GetProfilesResponse{}
-	mi := &file_profile_dossier_proto_msgTypes[1]
+	mi := &file_profile_dossier_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -138,7 +182,7 @@ func (x *GetProfilesResponse) String() string {
 func (*GetProfilesResponse) ProtoMessage() {}
 
 func (x *GetProfilesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_profile_dossier_proto_msgTypes[1]
+	mi := &file_profile_dossier_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -151,7 +195,7 @@ func (x *GetProfilesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProfilesResponse.ProtoReflect.Descriptor instead.
 func (*GetProfilesResponse) Descriptor() ([]byte, []int) {
-	return file_profile_dossier_proto_rawDescGZIP(), []int{1}
+	return file_profile_dossier_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetProfilesResponse) GetProfile() []*Profile {
@@ -170,7 +214,7 @@ type GetDossierResponse struct {
 
 func (x *GetDossierResponse) Reset() {
 	*x = GetDossierResponse{}
-	mi := &file_profile_dossier_proto_msgTypes[2]
+	mi := &file_profile_dossier_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -182,7 +226,7 @@ func (x *GetDossierResponse) String() string {
 func (*GetDossierResponse) ProtoMessage() {}
 
 func (x *GetDossierResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_profile_dossier_proto_msgTypes[2]
+	mi := &file_profile_dossier_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -195,7 +239,7 @@ func (x *GetDossierResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDossierResponse.ProtoReflect.Descriptor instead.
 func (*GetDossierResponse) Descriptor() ([]byte, []int) {
-	return file_profile_dossier_proto_rawDescGZIP(), []int{2}
+	return file_profile_dossier_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetDossierResponse) GetDossier() *Dossier {
@@ -221,7 +265,7 @@ type Profile struct {
 
 func (x *Profile) Reset() {
 	*x = Profile{}
-	mi := &file_profile_dossier_proto_msgTypes[3]
+	mi := &file_profile_dossier_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -233,7 +277,7 @@ func (x *Profile) String() string {
 func (*Profile) ProtoMessage() {}
 
 func (x *Profile) ProtoReflect() protoreflect.Message {
-	mi := &file_profile_dossier_proto_msgTypes[3]
+	mi := &file_profile_dossier_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -246,7 +290,7 @@ func (x *Profile) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Profile.ProtoReflect.Descriptor instead.
 func (*Profile) Descriptor() ([]byte, []int) {
-	return file_profile_dossier_proto_rawDescGZIP(), []int{3}
+	return file_profile_dossier_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Profile) GetId() string {
@@ -327,7 +371,7 @@ type Dossier struct {
 
 func (x *Dossier) Reset() {
 	*x = Dossier{}
-	mi := &file_profile_dossier_proto_msgTypes[4]
+	mi := &file_profile_dossier_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -339,7 +383,7 @@ func (x *Dossier) String() string {
 func (*Dossier) ProtoMessage() {}
 
 func (x *Dossier) ProtoReflect() protoreflect.Message {
-	mi := &file_profile_dossier_proto_msgTypes[4]
+	mi := &file_profile_dossier_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -352,7 +396,7 @@ func (x *Dossier) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Dossier.ProtoReflect.Descriptor instead.
 func (*Dossier) Descriptor() ([]byte, []int) {
-	return file_profile_dossier_proto_rawDescGZIP(), []int{4}
+	return file_profile_dossier_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Dossier) GetId() string {
@@ -459,7 +503,9 @@ const file_profile_dossier_proto_rawDesc = "" +
 	"\n" +
 	"\x15profile_dossier.proto\x12\aprofile\")\n" +
 	"\x11GetByEmailRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\"A\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\"2\n" +
+	"\x14GetByUsernameRequest\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busername\"A\n" +
 	"\x13GetProfilesResponse\x12*\n" +
 	"\aprofile\x18\x01 \x03(\v2\x10.profile.ProfileR\aprofile\"@\n" +
 	"\x12GetDossierResponse\x12*\n" +
@@ -498,10 +544,11 @@ const file_profile_dossier_proto_rawDesc = "" +
 	"\x19ACCESS_STATUS_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15ACCESS_STATUS_PENDING\x10\x01\x12\x19\n" +
 	"\x15ACCESS_STATUS_GRANTED\x10\x02\x12\x19\n" +
-	"\x15ACCESS_STATUS_REVOKED\x10\x032\xae\x01\n" +
+	"\x15ACCESS_STATUS_REVOKED\x10\x032\x82\x02\n" +
 	"\x0eProfileService\x12N\n" +
 	"\x12GetProfilesByEmail\x12\x1a.profile.GetByEmailRequest\x1a\x1c.profile.GetProfilesResponse\x12L\n" +
-	"\x11GetDossierByEmail\x12\x1a.profile.GetByEmailRequest\x1a\x1b.profile.GetDossierResponseB;Z9github.com/Foxtrot-14/FitRang/profile-service/proto;protob\x06proto3"
+	"\x11GetDossierByEmail\x12\x1a.profile.GetByEmailRequest\x1a\x1b.profile.GetDossierResponse\x12R\n" +
+	"\x14GetDossierByUsername\x12\x1d.profile.GetByUsernameRequest\x1a\x1b.profile.GetDossierResponseB;Z9github.com/Foxtrot-14/FitRang/profile-service/proto;protob\x06proto3"
 
 var (
 	file_profile_dossier_proto_rawDescOnce sync.Once
@@ -516,25 +563,28 @@ func file_profile_dossier_proto_rawDescGZIP() []byte {
 }
 
 var file_profile_dossier_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_profile_dossier_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_profile_dossier_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_profile_dossier_proto_goTypes = []any{
-	(AccessStatus)(0),           // 0: profile.AccessStatus
-	(*GetByEmailRequest)(nil),   // 1: profile.GetByEmailRequest
-	(*GetProfilesResponse)(nil), // 2: profile.GetProfilesResponse
-	(*GetDossierResponse)(nil),  // 3: profile.GetDossierResponse
-	(*Profile)(nil),             // 4: profile.Profile
-	(*Dossier)(nil),             // 5: profile.Dossier
+	(AccessStatus)(0),            // 0: profile.AccessStatus
+	(*GetByEmailRequest)(nil),    // 1: profile.GetByEmailRequest
+	(*GetByUsernameRequest)(nil), // 2: profile.GetByUsernameRequest
+	(*GetProfilesResponse)(nil),  // 3: profile.GetProfilesResponse
+	(*GetDossierResponse)(nil),   // 4: profile.GetDossierResponse
+	(*Profile)(nil),              // 5: profile.Profile
+	(*Dossier)(nil),              // 6: profile.Dossier
 }
 var file_profile_dossier_proto_depIdxs = []int32{
-	4, // 0: profile.GetProfilesResponse.profile:type_name -> profile.Profile
-	5, // 1: profile.GetDossierResponse.dossier:type_name -> profile.Dossier
+	5, // 0: profile.GetProfilesResponse.profile:type_name -> profile.Profile
+	6, // 1: profile.GetDossierResponse.dossier:type_name -> profile.Dossier
 	0, // 2: profile.Profile.access_status:type_name -> profile.AccessStatus
 	1, // 3: profile.ProfileService.GetProfilesByEmail:input_type -> profile.GetByEmailRequest
 	1, // 4: profile.ProfileService.GetDossierByEmail:input_type -> profile.GetByEmailRequest
-	2, // 5: profile.ProfileService.GetProfilesByEmail:output_type -> profile.GetProfilesResponse
-	3, // 6: profile.ProfileService.GetDossierByEmail:output_type -> profile.GetDossierResponse
-	5, // [5:7] is the sub-list for method output_type
-	3, // [3:5] is the sub-list for method input_type
+	2, // 5: profile.ProfileService.GetDossierByUsername:input_type -> profile.GetByUsernameRequest
+	3, // 6: profile.ProfileService.GetProfilesByEmail:output_type -> profile.GetProfilesResponse
+	4, // 7: profile.ProfileService.GetDossierByEmail:output_type -> profile.GetDossierResponse
+	4, // 8: profile.ProfileService.GetDossierByUsername:output_type -> profile.GetDossierResponse
+	6, // [6:9] is the sub-list for method output_type
+	3, // [3:6] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
 	3, // [3:3] is the sub-list for extension extendee
 	0, // [0:3] is the sub-list for field type_name
@@ -551,7 +601,7 @@ func file_profile_dossier_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_profile_dossier_proto_rawDesc), len(file_profile_dossier_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ProfileService_GetProfilesByEmail_FullMethodName = "/profile.ProfileService/GetProfilesByEmail"
-	ProfileService_GetDossierByEmail_FullMethodName  = "/profile.ProfileService/GetDossierByEmail"
+	ProfileService_GetProfilesByEmail_FullMethodName   = "/profile.ProfileService/GetProfilesByEmail"
+	ProfileService_GetDossierByEmail_FullMethodName    = "/profile.ProfileService/GetDossierByEmail"
+	ProfileService_GetDossierByUsername_FullMethodName = "/profile.ProfileService/GetDossierByUsername"
 )
 
 // ProfileServiceClient is the client API for ProfileService service.
@@ -29,6 +30,7 @@ const (
 type ProfileServiceClient interface {
 	GetProfilesByEmail(ctx context.Context, in *GetByEmailRequest, opts ...grpc.CallOption) (*GetProfilesResponse, error)
 	GetDossierByEmail(ctx context.Context, in *GetByEmailRequest, opts ...grpc.CallOption) (*GetDossierResponse, error)
+	GetDossierByUsername(ctx context.Context, in *GetByUsernameRequest, opts ...grpc.CallOption) (*GetDossierResponse, error)
 }
 
 type profileServiceClient struct {
@@ -59,12 +61,23 @@ func (c *profileServiceClient) GetDossierByEmail(ctx context.Context, in *GetByE
 	return out, nil
 }
 
+func (c *profileServiceClient) GetDossierByUsername(ctx context.Context, in *GetByUsernameRequest, opts ...grpc.CallOption) (*GetDossierResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDossierResponse)
+	err := c.cc.Invoke(ctx, ProfileService_GetDossierByUsername_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProfileServiceServer is the server API for ProfileService service.
 // All implementations must embed UnimplementedProfileServiceServer
 // for forward compatibility.
 type ProfileServiceServer interface {
 	GetProfilesByEmail(context.Context, *GetByEmailRequest) (*GetProfilesResponse, error)
 	GetDossierByEmail(context.Context, *GetByEmailRequest) (*GetDossierResponse, error)
+	GetDossierByUsername(context.Context, *GetByUsernameRequest) (*GetDossierResponse, error)
 	mustEmbedUnimplementedProfileServiceServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedProfileServiceServer) GetProfilesByEmail(context.Context, *Ge
 }
 func (UnimplementedProfileServiceServer) GetDossierByEmail(context.Context, *GetByEmailRequest) (*GetDossierResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetDossierByEmail not implemented")
+}
+func (UnimplementedProfileServiceServer) GetDossierByUsername(context.Context, *GetByUsernameRequest) (*GetDossierResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDossierByUsername not implemented")
 }
 func (UnimplementedProfileServiceServer) mustEmbedUnimplementedProfileServiceServer() {}
 func (UnimplementedProfileServiceServer) testEmbeddedByValue()                        {}
@@ -138,6 +154,24 @@ func _ProfileService_GetDossierByEmail_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProfileService_GetDossierByUsername_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetByUsernameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProfileServiceServer).GetDossierByUsername(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProfileService_GetDossierByUsername_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProfileServiceServer).GetDossierByUsername(ctx, req.(*GetByUsernameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProfileService_ServiceDesc is the grpc.ServiceDesc for ProfileService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +186,10 @@ var ProfileService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDossierByEmail",
 			Handler:    _ProfileService_GetDossierByEmail_Handler,
+		},
+		{
+			MethodName: "GetDossierByUsername",
+			Handler:    _ProfileService_GetDossierByUsername_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
