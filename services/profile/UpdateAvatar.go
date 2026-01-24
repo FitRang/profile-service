@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/Foxtrot-14/FitRang/profile-service/apperror"
-	"github.com/Foxtrot-14/FitRang/profile-service/graph/model"
+	"github.com/Foxtrot-14/FitRang/profile-service/db"
 	"github.com/Foxtrot-14/FitRang/profile-service/middleware"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -35,7 +35,7 @@ func (p *ProfileService) UpdateAvatar(ctx context.Context) (string, error) {
 		)
 	}
 
-	var profile model.MyProfile
+	var profile db.Profile
 	if err := res.Decode(&profile); err != nil {
 		return "", apperror.Wrap(
 			apperror.Internal,
@@ -44,7 +44,9 @@ func (p *ProfileService) UpdateAvatar(ctx context.Context) (string, error) {
 		)
 	}
 
-	url, err := getURL(ctx, profile.Username)
+	profileJSON := db.ToGraphQLProfile(&profile)
+
+	url, err := getURL(ctx, profileJSON.ID)
 	if err != nil {
 		return "", apperror.Wrap(
 			apperror.Internal,
