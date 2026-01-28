@@ -6,6 +6,7 @@ import (
 
 	"github.com/Foxtrot-14/FitRang/profile-service/db"
 	"github.com/Foxtrot-14/FitRang/profile-service/graph/model"
+	"go.mongodb.org/mongo-driver/v2/bson"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -24,6 +25,18 @@ func (s *ProfileGRPCService) GetProfilesByEmail(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
+	res := s.profileService.ProfileRepo.Col.FindOne(
+		ctx,
+		bson.M{"email": email},
+	)
+
+	var profile db.Profile
+	if err := res.Decode(&profile); err != nil {
+		log.Printf("[Error] while returning user profile: %v", err)
+	}
+
+	myProfile := db.ToGraphQLProfile(&profile)
+
 	for _, dossier := range dossiers {
 		dossierJSON := db.ToGraphQLDossier(&dossier)
 		if err := s.rdb.StoreDossier(ctx, dossierJSON.Username, *dossierJSON); err != nil {
@@ -40,7 +53,7 @@ func (s *ProfileGRPCService) GetProfilesByEmail(
 		profileJSON := db.ToGraphQLProfile(&profile)
 		profilesJSON = append(profilesJSON, *profileJSON)
 	}
-
+	profilesJSON = append(profilesJSON, *myProfile)
 	return &GetProfilesResponse{
 		Profile: toProtoProfiles(profilesJSON),
 	}, nil
